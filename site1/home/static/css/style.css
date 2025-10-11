@@ -1,0 +1,72 @@
+/* style.css - Travel Modern theme (light, clean) */
+
+/* Body & base */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f8fbff; /* very light blue */
+  color: #1b2430;
+}
+
+/* Navbar */
+.navbar-brand {
+  color: #0d6efd !important;
+  font-size: 1.25rem;
+}
+.navbar .nav-link {
+  color: #334155;
+}
+.navbar .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Carousel caption */
+.carousel-caption {
+  background: rgba(0,0,0,0.35);
+  padding: 1rem;
+  border-radius: 6px;
+}
+.carousel-caption h2 {
+  font-size: 1.6rem;
+  color: #fff;
+}
+.carousel-caption p {
+  color: #f0f6ff;
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: 10px;
+}
+.card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+  .carousel-caption {
+    position: static;
+    background: transparent;
+    color: #111;
+    padding: 0.5rem 0;
+  }
+  .carousel-caption h2 { font-size: 1.1rem; }
+}
+
+/* Utility */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* số dòng muốn hiển thị */
+  -webkit-box-orient: vertical;
+}
