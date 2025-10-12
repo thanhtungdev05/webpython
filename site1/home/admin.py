@@ -1,20 +1,29 @@
 from django.contrib import admin
-from .models import Destination, Review, Contact
+from .models import Destination, Tour, Booking, News, UserProfile
 
 @admin.register(Destination)
 class DestinationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'category', 'price', 'featured', 'created_at')
+    list_display = ('name', 'location', 'category', 'featured', 'created_at')
     list_filter = ('category', 'featured')
     search_fields = ('name', 'location')
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('user_name', 'destination', 'rating', 'created_at')
-    list_filter = ('rating',)
-    search_fields = ('user_name', 'destination__name')
+@admin.register(Tour)
+class TourAdmin(admin.ModelAdmin):
+    list_display = ('title', 'destination', 'price', 'duration', 'featured')
+    list_filter = ('destination', 'featured')
+    search_fields = ('title', 'destination__name')
 
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'created_at', 'processed')
-    list_filter = ('processed',)
-    search_fields = ('name', 'email')
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'full_name', 'tour', 'pax', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('full_name', 'email')
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'published_at', 'is_published')
+    prepopulated_fields = {"slug": ("title",)}
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone')
