@@ -1,99 +1,149 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<!-- Slideshow / Carousel -->
-<div id="mainCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+
+<!-- Hero Carousel -->
+<div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
   <div class="carousel-indicators">
-    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
   </div>
-  <div class="carousel-inner rounded-3 shadow-sm">
+  <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
     <div class="carousel-item active">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=6b6f8f3d4a6c2c6cca2f8bd0df3f3fce" class="d-block w-100" alt="beach">
-      <div class="carousel-caption d-none d-md-block text-start">
-        <h2 class="fw-bold">Khám phá bãi biển tuyệt đẹp</h2>
-        <p>Những bãi cát trắng, nước biển trong xanh đang chờ bạn.</p>
-        <a href="/destinations/" class="btn btn-primary">Xem địa điểm</a>
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600" class="d-block w-100" alt="beach">
+      <div class="carousel-caption text-start">
+        <h1 class="fw-bold display-5">Khám phá những bãi biển tuyệt đẹp</h1>
+        <p class="lead">Cùng chúng tôi tận hưởng kỳ nghỉ mơ ước của bạn.</p>
+        <a href="{% url 'tour_list' %}" class="btn btn-primary btn-lg shadow">Khám phá ngay</a>
       </div>
     </div>
     <div class="carousel-item">
-      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=8de044c2d21b5953b0e5b9b2f3e1e8c9" class="d-block w-100" alt="mountain">
-      <div class="carousel-caption d-none d-md-block text-start">
-        <h2 class="fw-bold">Trekking xuyên rừng núi</h2>
-        <p>Hành trình đến các đỉnh núi huyền thoại và những ngôi làng yên bình.</p>
-        <a href="/destinations/" class="btn btn-primary">Khám phá</a>
+      <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600" class="d-block w-100" alt="mountain">
+      <div class="carousel-caption text-start">
+        <h1 class="fw-bold display-5">Trekking xuyên rừng núi</h1>
+        <p class="lead">Hòa mình vào thiên nhiên và chinh phục đỉnh cao.</p>
+        <a href="{% url 'tour_list' %}" class="btn btn-primary btn-lg shadow">Tham gia ngay</a>
       </div>
     </div>
     <div class="carousel-item">
-      <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=6c3dbb3a3b0a6ddf1d3f3e3c9a6e6b1b" class="d-block w-100" alt="city">
-      <div class="carousel-caption d-none d-md-block text-start">
-        <h2 class="fw-bold">Thành phố & Văn hóa</h2>
-        <p>Khám phá phố cổ, ẩm thực và di tích lịch sử.</p>
-        <a href="/destinations/" class="btn btn-primary">Tìm tour</a>
+      <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1600" class="d-block w-100" alt="city">
+      <div class="carousel-caption text-start">
+        <h1 class="fw-bold display-5">Văn hóa & Thành phố</h1>
+        <p class="lead">Khám phá những địa điểm lịch sử và ẩm thực độc đáo.</p>
+        <a href="{% url 'tour_list' %}" class="btn btn-primary btn-lg shadow">Tìm hiểu thêm</a>
       </div>
     </div>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>
 
 <!-- Featured Destinations -->
-<h3 class="mb-3">Địa điểm nổi bật</h3>
-<div class="row">
-  {% comment %} Nếu không có dữ liệu từ backend, bạn có thể tạm dùng dữ liệu mẫu {% endcomment %}
-  {% if featured_destinations %}
-    {% for dest in featured_destinations %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-          <img src="{{ dest.image_url }}" class="card-img-top" alt="{{ dest.name }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ dest.name }}</h5>
-            <p class="card-text text-truncate">{{ dest.description }}</p>
-            <a href="{% url 'destination_detail' dest.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary">Địa điểm nổi bật</h2>
+      <p class="text-muted">Khám phá những địa điểm du lịch được yêu thích nhất</p>
+    </div>
+    <div class="row">
+      {% if featured_destinations %}
+        {% for dest in featured_destinations %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-hover">
+            <img src="{{ dest.image_url }}" class="card-img-top rounded-top" alt="{{ dest.name }}">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold">{{ dest.name }}</h5>
+              <p class="card-text text-muted text-truncate">{{ dest.description }}</p>
+              <a href="{% url 'destination_detail' dest.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
-  {% else %}
-    <!-- Dữ liệu mẫu tạm thời -->
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6b6f8f3d4a6c2c6cca2f8bd0df3f3fce" class="card-img-top" alt="Sample">
-        <div class="card-body">
-          <h5 class="card-title">Bãi biển Nắng Vàng</h5>
-          <p class="card-text text-truncate">Bãi biển cát trắng, nước trong xanh, thích hợp nghỉ dưỡng và lặn biển.</p>
-          <a href="/destinations/" class="btn btn-outline-primary">Xem chi tiết</a>
+        {% endfor %}
+      {% else %}
+        <!-- Sample data if no backend -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-hover">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200" class="card-img-top rounded-top" alt="beach">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold">Bãi Biển Nắng Vàng</h5>
+              <p class="card-text text-muted">Bãi biển tuyệt đẹp với cát trắng mịn và nước xanh ngọc.</p>
+              <a href="#" class="btn btn-outline-primary">Xem chi tiết</a>
+            </div>
+          </div>
         </div>
-      </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-hover">
+            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200" class="card-img-top rounded-top" alt="mountain">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold">Đỉnh Núi Huyền Ảo</h5>
+              <p class="card-text text-muted">Trải nghiệm trekking, cắm trại giữa thiên nhiên hùng vĩ.</p>
+              <a href="#" class="btn btn-outline-primary">Xem chi tiết</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-hover">
+            <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1200" class="card-img-top rounded-top" alt="city">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold">Thành Phố Cổ Kính</h5>
+              <p class="card-text text-muted">Khám phá văn hóa và ẩm thực truyền thống hấp dẫn.</p>
+              <a href="#" class="btn btn-outline-primary">Xem chi tiết</a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
+  </div>
+</section>
 
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8de044c2d21b5953b0e5b9b2f3e1e8c9" class="card-img-top" alt="Sample">
-        <div class="card-body">
-          <h5 class="card-title">Đỉnh Núi Huyền Ảo</h5>
-          <p class="card-text text-truncate">Hành trình trekking, cắm trại dưới bầu trời đầy sao.</p>
-          <a href="/destinations/" class="btn btn-outline-primary">Xem chi tiết</a>
-        </div>
-      </div>
-    </div>
+<!-- Special Offers -->
+<section class="py-5 text-center bg-gradient bg-primary text-white">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Ưu đãi đặc biệt mùa hè!</h2>
+    <p class="lead mb-4">Giảm giá lên đến 30% cho các tour nội địa trong tháng này.</p>
+    <a href="{% url 'tour_list' %}" class="btn btn-light btn-lg text-primary fw-semibold">Xem ngay</a>
+  </div>
+</section>
 
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6c3dbb3a3b0a6ddf1d3f3e3c9a6e6b1b" class="card-img-top" alt="Sample">
-        <div class="card-body">
-          <h5 class="card-title">Thành phố Cổ Kính</h5>
-          <p class="card-text text-truncate">Thưởng thức ẩm thực truyền thống và tham quan di tích lịch sử.</p>
-          <a href="/destinations/" class="btn btn-outline-primary">Xem chi tiết</a>
+<!-- Testimonials -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary">Khách hàng nói gì?</h2>
+      <p class="text-muted">Những trải nghiệm thực tế từ khách hàng của chúng tôi</p>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="p-4 shadow-sm rounded-3 bg-white">
+          <p class="fst-italic">“Tour biển tuyệt vời, dịch vụ tốt và hướng dẫn viên thân thiện!”</p>
+          <h6 class="fw-bold text-primary mt-3">Nguyễn Minh Anh</h6>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 shadow-sm rounded-3 bg-white">
+          <p class="fst-italic">“Trải nghiệm trekking thật đáng nhớ, mọi thứ được tổ chức chuyên nghiệp.”</p>
+          <h6 class="fw-bold text-primary mt-3">Trần Quốc Huy</h6>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 shadow-sm rounded-3 bg-white">
+          <p class="fst-italic">“Rất hài lòng với tour thành phố cổ – ẩm thực cực ngon!”</p>
+          <h6 class="fw-bold text-primary mt-3">Lê Thảo Nhi</h6>
         </div>
       </div>
     </div>
-  {% endif %}
-</div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 bg-light text-center">
+  <div class="container">
+    <h2 class="fw-bold text-primary mb-3">Nhận thông tin tour mới nhất</h2>
+    <p class="text-muted mb-4">Đăng ký để không bỏ lỡ những ưu đãi hấp dẫn</p>
+    <form class="d-flex justify-content-center">
+      <input type="email" class="form-control w-50 me-2" placeholder="Nhập email của bạn...">
+      <button class="btn btn-primary">Đăng ký</button>
+    </form>
+  </div>
+</section>
+
 {% endblock %}

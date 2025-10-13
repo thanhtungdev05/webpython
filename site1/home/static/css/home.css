@@ -1,0 +1,55 @@
+/* ===== HOME PAGE CUSTOM STYLES ===== */
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  max-width: 600px;
+}
+
+/* Hiệu ứng hover cho card */
+.shadow-hover {
+  transition: all 0.3s ease;
+}
+.shadow-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0, 150, 255, 0.3);
+}
+
+/* Glow nhẹ cho text */
+.text-shadow {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Gradient nền */
+.bg-gradient {
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+}
+
+/* Responsive spacing cho các section */
+section {
+  scroll-margin-top: 80px;
+}
+/* Hiệu ứng hover card */
+.shadow-hover {
+  transition: all 0.3s ease;
+}
+.shadow-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Căn lề và background đẹp */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* Gradient newsletter */
+.bg-gradient {
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+}
+
+/* Empty state hình ảnh */
+.opacity-75 {
+  opacity: 0.75;
+}
+

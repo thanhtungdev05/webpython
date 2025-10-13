@@ -15,5 +15,11 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('booking/success/', views.booking_success, name='booking_success'),
+    path('destination/<int:dest_id>/', views.tour_from_destination, name='tour_from_destination'),
+    path('news/<int:id>/', views.news_detail, name='news_detail'),
+    path('news/', views.news_list, name='news_list'),
+    
+
+
 
 ]

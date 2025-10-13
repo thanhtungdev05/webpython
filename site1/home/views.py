@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Destination, Tour, Booking, News, UserProfile
 from .forms import ContactForm, BookingForm, NewsForm
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Tour, News  # đổi lại đúng tên model của bạn
 from .forms import UserRegisterForm, UserLoginForm
 # --- Trang chủ ---
@@ -14,7 +14,10 @@ def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
     tours = Tour.objects.filter(featured=True)[:6]
     news = News.objects.filter(is_published=True).order_by('-published_at')[:3]
-    return render(request, 'index.html', {'destinations': destinations, 'tours': tours, 'news': news})
+    return render(request, 'index.html', {
+        'destinations': destinations,
+        'tours': tours,
+        'news': news,})
 
 
 # --- Danh sách tour ---
@@ -23,10 +26,18 @@ def tour_list(request):
     return render(request, 'tour-list.html', {'tours': tours})
 
 
+
 # --- Chi tiết tour ---
 def tour_detail(request, id):
     tour = get_object_or_404(Tour, id=id)
     return render(request, 'tour-detail.html', {'tour': tour})
+from django.shortcuts import render, get_object_or_404, redirect
+# ... các import khác đã có
+
+def tour_from_destination(request, dest_id):
+    destination = get_object_or_404(Destination, id=dest_id)
+    tours = Tour.objects.filter(destination=destination)
+    return render(request, 'tour-detail.html', {'destination': destination, 'tours': tours})
 
 
 # --- Đặt tour ---
