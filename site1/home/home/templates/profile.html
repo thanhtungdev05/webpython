@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center">Hồ sơ cá nhân</h2>
+  <p><strong>Tên:</strong> {{ request.user.username }}</p>
+  <p><strong>Email:</strong> {{ request.user.email }}</p>
+  <hr>
+  <h4>Lịch sử đặt tour</h4>
+  {% if bookings %}
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Mã đơn</th>
+          <th>Tour</th>
+          <th>Ngày đặt</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td>{{ b.tour.title }}</td>
+          <td>{{ b.created_at|date:"d/m/Y" }}</td>
+          <td>{{ b.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Bạn chưa có đơn đặt tour nào.</p>
+  {% endif %}
+</div>
+{% endblock %}
