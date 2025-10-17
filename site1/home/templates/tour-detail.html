@@ -1,27 +1,130 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="row">
-  <div class="col-md-8">
-    <img src="{{ tour.image_url }}" class="img-fluid rounded mb-3" alt="{{ tour.title }}">
-    <h2>{{ tour.title }}</h2>
-    <p class="text-muted">Điểm đến: {{ tour.destination.name }} — Thời gian: {{ tour.duration }}</p>
-    <p>{{ tour.schedule|linebreaks }}</p>
-  </div>
-  <div class="col-md-4">
-    <div class="card p-3">
-      <h5>Đặt tour</h5>
-      <p class="text-success">Giá: {{ tour.price }} VNĐ</p>
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary w-100">Đặt ngay</button>
-      </form>
-    </div>
-    <div class="mt-3">
-      <h6>Liên hệ hỗ trợ</h6>
-      <p>Hotline: 0123-456-789</p>
-      <p>Email: support@travel.example</p>
-    </div>
+<link rel="stylesheet" href="{% static 'css/tour_detail.css' %}">
+
+<!-- 🏞 Hero Banner -->
+<div class="tour-hero" style="background-image: url('{{ tour.image_url }}');">
+  <div class="overlay">
+    <h1>{{ tour.title }}</h1>
+    <p>{{ tour.destination.name }} — {{ tour.duration }}</p>
   </div>
 </div>
+
+<div class="container tour-detail">
+  <div class="row">
+    <!-- 🧭 Cột trái: thông tin tour -->
+    <div class="col-md-8">
+      <!-- Bộ sưu tập ảnh -->
+      <div class="gallery mb-4">
+        <img src="{{ tour.image_url }}" alt="{{ tour.title }}" class="main-img">
+      </div>
+
+      <h2 class="tour-title">{{ tour.title }}</h2>
+      {% if tour.featured %}
+        <span class="badge bg-warning text-dark">Tour nổi bật ⭐</span>
+      {% endif %}
+      <p class="text-muted mt-2">Điểm đến: <strong>{{ tour.destination.name }}</strong></p>
+      <p class="tour-desc">{{ tour.schedule|linebreaks }}</p>
+
+      <!-- Đánh giá -->
+      <div class="reviews-section mt-5">
+        <h4>Đánh giá & nhận xét</h4>
+
+        <div class="review-summary">
+          <span class="avg-rating">⭐ {{ avg_rating }}/5</span>
+          <p>{{ reviews.count }} đánh giá</p>
+        </div>
+
+        {% if user.is_authenticated %}
+        <!-- Form đánh giá -->
+        <form method="post" class="review-form">
+          {% csrf_token %}
+          <label>Chấm điểm:</label>
+          <div class="star-rating mb-2">
+            {% for i in "54321" %}
+              <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}">
+              <label for="star{{ i }}">★</label>
+            {% endfor %}
+          </div>
+
+          <textarea name="comment" class="form-control mb-2" placeholder="Viết nhận xét..."></textarea>
+          <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </form>
+        {% else %}
+          <p class="text-muted mt-2">Vui lòng <a href="{% url 'login' %}">đăng nhập</a> để đánh giá.</p>
+        {% endif %}
+
+        <hr>
+
+        <!-- Danh sách đánh giá -->
+        {% for review in reviews %}
+        <div class="review-item mb-3">
+          <p class="fw-bold mb-1">{{ review.user.username }} — {{ review.rating }}⭐</p>
+          <p>{{ review.comment }}</p>
+          <small class="text-muted">{{ review.created_at|date:"d/m/Y H:i" }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 💳 Cột phải: thông tin đặt tour -->
+    <div class="col-md-4">
+      <div class="booking-card shadow-sm">
+        <h5 class="fw-bold mb-2">Đặt Tour Ngay</h5>
+        <p class="price-tag">{{ tour.price|floatformat:0 }} VNĐ</p>
+        <p><strong>Thời lượng:</strong> {{ tour.duration }}</p>
+        <p><strong>Địa điểm:</strong> {{ tour.destination.name }}</p>
+
+        <form method="post" action="{% url 'booking' %}">
+  {% csrf_token %}
+  <input type="hidden" name="tour_id" value="{{ tour.id }}">
+  {{ form.as_p }}
+  <button class="btn btn-success w-100 mt-2">Đặt ngay</button>
+</form>
+      </div>
+
+      <div class="contact-card mt-4">
+        <h6>Liên hệ hỗ trợ</h6>
+        <p>📞 Hotline: <strong>0123-456-789</strong></p>
+        <p>✉️ Email: support@travel.vn</p>
+      </div>
+
+      <div class="favorite-btn mt-3">
+        <button class="btn btn-outline-danger w-100">❤️ Thêm vào yêu thích</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🌍 Bản đồ -->
+  <div class="map-container mt-5">
+    <h4>Vị trí điểm đến</h4>
+    <iframe
+      src="https://www.google.com/maps?q={{ tour.destination.location|urlencode }}&output=embed"
+      width="100%" height="400" style="border:0;" allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- ✨ Tour tương tự -->
+  {% if similar_tours %}
+  <div class="similar-tours mt-5">
+    <h4>Gợi ý tour tương tự</h4>
+    <div class="row">
+      {% for t in similar_tours %}
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <img src="{{ t.image_url }}" class="card-img-top" alt="{{ t.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ t.title }}</h5>
+            <p class="text-success fw-bold">{{ t.price|floatformat:0 }} VNĐ</p>
+            <a href="{% url 'tour_detail' t.id %}" class="btn btn-outline-primary w-100">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
 {% endblock %}

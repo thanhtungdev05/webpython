@@ -9,6 +9,10 @@ from .forms import ContactForm, BookingForm, NewsForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Tour, News  # đổi lại đúng tên model của bạn
 from .forms import UserRegisterForm, UserLoginForm
+from django.http import JsonResponse
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django import template
 # --- Trang chủ ---
 def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
@@ -20,18 +24,79 @@ def home(request):
         'news': news,})
 
 
-# --- Danh sách tour ---
 def tour_list(request):
-    tours = Tour.objects.all().order_by('-created_at')
-    return render(request, 'tour-list.html', {'tours': tours})
+    # Lấy dữ liệu từ form GET
+    q = request.GET.get('q', '').strip()
+    destination = request.GET.get('destination', '').strip()
+    city = request.GET.get('city', '').strip()
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    tours = Tour.objects.all()
+
+    # --- Lọc theo ô tìm kiếm ---
+    if q:
+        tours = tours.filter(
+            Q(title__icontains=q) |
+            Q(destination__name__icontains=q) |
+            Q(destination__location__icontains=q)
+        )
+
+    # --- Lọc riêng theo trường ---
+    if destination:
+        tours = tours.filter(destination__name__icontains=destination)
+    if city:
+        tours = tours.filter(destination__location__icontains=city)
+    if min_price:
+        tours = tours.filter(price__gte=min_price)
+    if max_price:
+        tours = tours.filter(price__lte=max_price)
+
+    # --- Nếu không có kết quả, gợi ý 3 tour rẻ nhất ---
+    similar_tours = None
+    if not tours.exists():
+        similar_tours = Tour.objects.order_by('price')[:3]
+
+    return render(request, 'tour_list.html', {
+        'tours': tours,
+        'q': q,
+        'destination': destination,
+        'city': city,
+        'min_price': min_price,
+        'max_price': max_price,
+        'similar_tours': similar_tours
+    })
+
+# --- API gợi ý địa điểm khi gõ từ khóa ---
+def suggest_destination(request):
+    q = request.GET.get('q', '').strip()
+    suggestions = []
+    if q:
+        destinations = Destination.objects.filter(name__icontains=q).values_list('name', flat=True)[:5]
+        suggestions = list(destinations)
+    return JsonResponse(suggestions, safe=False)
+
+
+# --- API gợi ý địa điểm khi gõ (autocomplete) ---
+def suggest_destination(request):
+    query = request.GET.get('q', '').strip()
+    results = []
+    if query:
+        results = list(
+            Destination.objects.filter(name__icontains=query)
+            .values_list('name', flat=True)
+            .distinct()[:5]
+        )
+    return JsonResponse(results, safe=False)
 
 
 
 # --- Chi tiết tour ---
 def tour_detail(request, id):
     tour = get_object_or_404(Tour, id=id)
-    return render(request, 'tour-detail.html', {'tour': tour})
-from django.shortcuts import render, get_object_or_404, redirect
+    related_tours = Tour.objects.filter(destination=tour.destination).exclude(id=tour.id)[:3]
+    return render(request, 'tour-detail.html', {'tour': tour, 'related_tours': related_tours})
+
 # ... các import khác đã có
 
 def tour_from_destination(request, dest_id):
@@ -47,20 +112,25 @@ def booking_view(request):
         tour_id = request.POST.get('tour_id')
         tour = get_object_or_404(Tour, id=tour_id)
         pax = int(request.POST.get('pax', 1))
+
         booking = Booking.objects.create(
             tour=tour,
             user=request.user,
-            full_name=request.user.username,
+            full_name=request.user.get_full_name() or request.user.username,
             email=request.user.email,
-            phone=request.user.profile.phone if hasattr(request.user, 'profile') else '',
+            phone=getattr(request.user, 'phone', ''),  # hoặc request.user.profile.phone nếu có profile model
             pax=pax,
             status='Pending'
         )
-        messages.success(request, 'Đặt tour thành công! Vui lòng chờ xác nhận.')
-        return redirect('profile')
-    else:
-        return redirect('tour_list')
 
+        messages.success(request, f'Bạn đã đặt tour "{tour.title}" thành công!')
+        return redirect('booking_success')
+    
+    return redirect('tour_list')
+
+
+# --- Trang thông báo thành công ---
+@login_required
 def booking_success(request):
     return render(request, 'booking_success.html')
 
@@ -123,8 +193,145 @@ def user_logout(request):
     return redirect('home')
 
 
-# --- Trang hồ sơ ---
+
+def tour_list(request):
+    tours = Tour.objects.all()
+
+    destination = request.GET.get('destination')
+    city = request.GET.get('city')
+    price_min = request.GET.get('price_min')
+    price_max = request.GET.get('price_max')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if destination:
+        tours = tours.filter(name__icontains=destination)
+    if city:
+        tours = tours.filter(city__icontains=city)
+    if price_min:
+        tours = tours.filter(price__gte=price_min)
+    if price_max:
+        tours = tours.filter(price__lte=price_max)
+    if start_date:
+        tours = tours.filter(start_date__gte=start_date)
+    if end_date:
+        tours = tours.filter(end_date__lte=end_date)
+
+    return render(request, 'tour-list.html', {'tours': tours})
+def suggest_destination(request):
+    query = request.GET.get('q', '')
+    results = []
+    if query:
+        results = list(
+            Destination.objects.filter(name__icontains=query)
+            .values_list('name', flat=True)[:5]
+        )
+    return JsonResponse(results, safe=False)
+
+def suggest_city(request):
+    query = request.GET.get('q', '')
+    results = []
+    if query:
+        results = list(
+            Tour.objects.filter(city__icontains=query)
+            .values_list('city', flat=True)
+            .distinct()[:5]
+        )
+    return JsonResponse(results, safe=False)
+@login_required
 @login_required
 def profile(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'profile.html', {'bookings': bookings})
+    total_bookings = bookings.count()
+    cancelled_bookings = bookings.filter(status='Hủy').count()
+    completed_bookings = bookings.filter(status='Duyệt').count()
+
+    # Nếu người dùng thay đổi pax qua form (dự phòng, AJAX xử lý riêng)
+    if request.method == 'POST':
+        booking_id = request.POST.get('booking_id')
+        new_pax = request.POST.get('pax')
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        try:
+            booking.pax = int(new_pax)
+            booking.save()
+        except ValueError:
+            pass
+
+    context = {
+        'bookings': bookings,
+        'total_bookings': total_bookings,
+        'cancelled_bookings': cancelled_bookings,
+        'completed_bookings': completed_bookings,
+    }
+
+    if request.user.is_staff:
+        context['admin_bookings'] = Booking.objects.all().order_by('-created_at')
+
+    return render(request, 'profile.html', context)
+
+# -----------------------
+# 💰 Cập nhật số lượng khách
+# -----------------------
+@login_required
+def update_pax(request):
+    if request.method == 'POST':
+        booking_id = request.POST.get('booking_id')
+        pax = request.POST.get('pax')
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        try:
+            booking.pax = int(pax)
+            booking.save()
+            total_price = booking.total_price
+            total_price_formatted = f"{total_price:,.0f} ₫"
+            return JsonResponse({'success': True, 'total_price': total_price_formatted})
+        except ValueError:
+            return JsonResponse({'success': False, 'error': 'Giá trị không hợp lệ'})
+    return JsonResponse({'success': False, 'error': 'Phương thức không hợp lệ'})
+
+# -----------------------
+# 🟢 AJAX: Duyệt đơn (cho user)
+# -----------------------
+@login_required
+def approve_booking_ajax(request):
+    if request.method == "POST":
+        booking_id = request.POST.get('booking_id')
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        booking.status = 'Duyệt'
+        booking.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Phương thức không hợp lệ'})
+
+# -----------------------
+# 🔴 AJAX: Hủy đơn (cho user)
+# -----------------------
+@login_required
+def cancel_booking_ajax(request):
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        try:
+            booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+            booking.delete()  # xóa luôn khỏi DB
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ"})
+
+# -----------------------
+# 🧑‍💼 Dành cho Admin
+# -----------------------
+def admin_required(view_func):
+    return user_passes_test(lambda u: u.is_staff)(view_func)
+
+@admin_required
+def approve_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'Duyệt'
+    booking.save()
+    return redirect('profile')
+
+@admin_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'Hủy'
+    booking.save()
+    return redirect('profile')

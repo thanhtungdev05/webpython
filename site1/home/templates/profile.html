@@ -1,34 +1,166 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center">Hồ sơ cá nhân</h2>
+  <h2 class="text-center mb-4">Hồ sơ cá nhân</h2>
   <p><strong>Tên:</strong> {{ request.user.username }}</p>
   <p><strong>Email:</strong> {{ request.user.email }}</p>
+
+  <div class="stats d-flex justify-content-around my-4">
+    <div class="bg-primary text-white p-3 rounded text-center flex-fill mx-1">
+      <h4>Đã tham gia</h4>
+      <p>{{ completed_bookings }}</p>
+    </div>
+    <div class="bg-danger text-white p-3 rounded text-center flex-fill mx-1">
+      <h4>Đã hủy</h4>
+      <p>{{ cancelled_bookings }}</p>
+    </div>
+    <div class="bg-success text-white p-3 rounded text-center flex-fill mx-1">
+      <h4>Tổng đơn</h4>
+      <p>{{ total_bookings }}</p>
+    </div>
+  </div>
+
   <hr>
   <h4>Lịch sử đặt tour</h4>
   {% if bookings %}
-    <table class="table table-bordered mt-3">
-      <thead>
-        <tr>
-          <th>Mã đơn</th>
-          <th>Tour</th>
-          <th>Ngày đặt</th>
-          <th>Trạng thái</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for b in bookings %}
-        <tr>
-          <td>{{ b.id }}</td>
-          <td>{{ b.tour.title }}</td>
-          <td>{{ b.created_at|date:"d/m/Y" }}</td>
-          <td>{{ b.status }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <table class="table table-bordered mt-3 text-center align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Mã đơn</th>
+        <th>Tour</th>
+        <th>Ngày đặt</th>
+        <th>Số lượng</th>
+        <th>Tổng tiền</th>
+        <th>Trạng thái</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for b in bookings %}
+    <tr data-booking-id="{{ b.id }}">
+      <td>{{ b.id }}</td>
+      <td>{{ b.tour.title }}</td>
+      <td>{{ b.booking_date|date:"d/m/Y" }}</td>
+      <td>
+        <input type="number" class="form-control pax-input" 
+               value="{{ b.pax }}" min="1" 
+               style="width:80px; margin:auto;">
+      </td>
+      <td class="total-price">{{ b.total_price|floatformat:0 }} ₫</td>
+      <td>
+        {% if b.status == "Pending" %}
+          <button class="btn btn-sm btn-warning approve-btn">Đang duyệt</button>
+          <button class="btn btn-sm btn-danger cancel-btn">Hủy</button>
+        {% elif b.status == "Duyệt" %}
+          <span class="badge bg-success">Đã duyệt</span>
+        {% elif b.status == "Hủy" %}
+          <span class="badge bg-danger">Đã hủy</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
   {% else %}
     <p>Bạn chưa có đơn đặt tour nào.</p>
   {% endif %}
 </div>
+
+<script>
+// ✅ Lấy token CSRF tự động (an toàn hơn)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+$.ajaxSetup({
+    headers: { 'X-CSRFToken': csrftoken }
+});
+
+$(document).ready(function(){
+
+    // ✅ Cập nhật số lượng người
+    $('.pax-input').on('change', function(){
+        var row = $(this).closest('tr');
+        var booking_id = row.data('booking-id');
+        var pax = $(this).val();
+
+        $.ajax({
+            url: "{% url 'update_pax' %}",
+            type: "POST",
+            data: { 'booking_id': booking_id, 'pax': pax },
+            success: function(response){
+                if(response.success){
+                    row.find('.total-price').text(response.total_price);
+                } else {
+                    alert(response.error || 'Lỗi cập nhật số lượng!');
+                }
+            },
+            error: function(){
+                alert('Có lỗi xảy ra, vui lòng thử lại!');
+            }
+        });
+    });
+
+    // ✅ Duyệt tour
+    $('.approve-btn').on('click', function(){
+        var row = $(this).closest('tr');
+        var booking_id = row.data('booking-id');
+        $.ajax({
+            url: "{% url 'approve_booking_ajax' %}",
+            type: "POST",
+            data: { 'booking_id': booking_id },
+            success: function(response){
+                if(response.success){
+                    row.find('td:last').html('<span class="badge bg-success">Đã duyệt</span>');
+                }
+            }
+        });
+    });
+
+    $(document).ready(function(){
+    $('.cancel-btn').on('click', function(){
+        var row = $(this).closest('tr');
+        var booking_id = row.data('booking-id');
+        if(confirm('Bạn có chắc muốn hủy đơn này không?')){
+            $.ajax({
+                url: "{% url 'cancel_booking_ajax' %}",
+                type: "POST",
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                data: { 'booking_id': booking_id },
+                success: function(response){
+                    console.log(response); // kiểm tra log
+                    if(response.success){
+                        row.fadeOut(300, function(){ $(this).remove(); });
+                    } else {
+                        alert("❌ " + (response.error || "Không thể hủy!"));
+                    }
+                },
+                error: function(xhr){
+                    alert("🚨 Lỗi server: " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        }
+    });
+});
+      
+
+  });
+  </script>
 {% endblock %}

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 
 <!-- 🌅 Hero Carousel -->
 <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
@@ -32,34 +34,85 @@
   </div>
 </div>
 
+<!-- 🔍 Thanh tìm kiếm -->
+<section class="hero-search py-5 text-center text-white">
+  <div class="container">
+    <h1 class="fw-bold mb-4 display-5">Tìm Tour Hoàn Hảo Cho Bạn ✈️</h1>
+    <form method="GET" action="{% url 'tour_list' %}" class="search-bar shadow-lg rounded-4 bg-white p-4 mx-auto">
+      <div class="row g-3 align-items-center">
+
+        <!-- Địa điểm -->
+        <div class="col-md-3 position-relative">
+          <label for="destination" class="form-label fw-semibold">Địa điểm</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+            <input type="text" id="destination" name="destination" class="form-control" placeholder="Đà Lạt, Nha Trang..." autocomplete="off">
+          </div>
+          <ul id="destination-suggestions" class="suggestions"></ul>
+        </div>
+
+        <!-- Thành phố khởi hành -->
+        <div class="col-md-3 position-relative">
+          <label for="city" class="form-label fw-semibold">Thành phố khởi hành</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+            <input type="text" id="city" name="city" class="form-control" placeholder="TP. Hồ Chí Minh" autocomplete="off">
+          </div>
+          <ul id="city-suggestions" class="suggestions"></ul>
+        </div>
+
+        <!-- Giá -->
+        <div class="col-md-2">
+          <label class="form-label fw-semibold">Giá từ</label>
+          <input type="number" name="min_price" class="form-control" placeholder="1,000,000">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label fw-semibold">Đến</label>
+          <input type="number" name="max_price" class="form-control" placeholder="50,000,000">
+        </div>
+
+        <!-- Nút tìm -->
+        <div class="col-md-2 d-grid">
+          <button class="btn btn-primary btn-lg rounded-3 mt-4">
+            <i class="bi bi-search"></i> Tìm kiếm
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
 <!-- ✨ Địa điểm nổi bật -->
 <section class="py-5 bg-light">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold text-primary">Địa điểm nổi bật</h2>
+      <h2 class="fw-bold text-primary">Trải nghiệm hệ sinh thái du lịch</h2>
       <p class="text-muted">Khám phá những điểm đến hấp dẫn nhất của chúng tôi</p>
     </div>
-    <div class="row">
-      {% for dest in destinations %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-hover">
-          <img src="{{ dest.image_url }}" class="card-img-top rounded-top" alt="{{ dest.name }}">
-          <div class="card-body">
-            <h5 class="card-title fw-semibold">{{ dest.name }}</h5>
-            <p class="card-text text-muted text-truncate">{{ dest.description }}</p>
-            <a href="{% url 'tour_from_destination' dest.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
+
+    {% if destinations %}
+      <div class="row g-4">
+        {% for dest in destinations %}
+        <div class="col-md-6 col-lg-6">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="{{ dest.image_url }}" class="card-img-top rounded-3" alt="{{ dest.name }}">
+            <div class="card-body">
+              <h5 class="fw-bold">{{ dest.name }}</h5>
+              <p class="text-muted">{{ dest.description|truncatewords:20 }}</p>
+              <a href="{% url 'tour_from_destination' dest.id %}" class="text-primary fw-semibold">Khám phá ➜</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="col-12 text-center py-5">
-        <img src="{% static 'images/empty-destination.svg' %}" alt="no destinations" width="150" class="mb-3 opacity-75">
+    {% else %}
+      <div class="text-center py-5">
+        <img src="{% static 'images/empty-destination.svg' %}" width="150" class="mb-3 opacity-75">
         <h5 class="fw-bold text-muted">Chưa có địa điểm nổi bật nào</h5>
-        <p class="text-muted">Hãy cùng khám phá thêm các điểm đến tuyệt vời trong hành trình của bạn.</p>
+        <p class="text-muted">Khám phá thêm những hành trình tuyệt vời.</p>
         <a href="{% url 'about' %}" class="btn btn-primary mt-3">Giới thiệu về chúng tôi</a>
       </div>
-      {% endfor %}
-    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -68,29 +121,32 @@
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold text-primary">Tour nổi bật</h2>
-      <p class="text-muted">Những tour được yêu thích nhất hiện nay</p>
+      <p class="text-muted">Những hành trình được yêu thích nhất</p>
     </div>
-    <div class="row">
-      {% for tour in tours %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-hover">
-          <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.name }}">
-          <div class="card-body">
-            <h5 class="card-title fw-semibold">{{ tour.name }}</h5>
-            <p class="card-text text-muted">{{ tour.description|truncatewords:15 }}</p>
-            <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
+
+    {% if tours %}
+      <div class="row g-4">
+        {% for tour in tours %}
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.name }}">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold">{{ tour.name }}</h5>
+              <p class="card-text text-muted">{{ tour.description|truncatewords:20 }}</p>
+              <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="col-12 text-center py-5">
-        <img src="{% static 'images/empty-tour.svg' %}" alt="no tours" width="150" class="mb-3 opacity-75">
-        <h5 class="fw-bold text-muted">Hiện chưa có tour nổi bật nào</h5>
-        <p class="text-muted">Khám phá các tour hấp dẫn đang chờ bạn!</p>
+    {% else %}
+      <div class="text-center py-5">
+        <img src="{% static 'images/empty-tour.svg' %}" width="150" class="mb-3 opacity-75">
+        <h5 class="fw-bold text-muted">Hiện chưa có tour nào nổi bật</h5>
+        <p class="text-muted">Hãy xem danh sách tour để chọn hành trình phù hợp.</p>
         <a href="{% url 'tour_list' %}" class="btn btn-primary mt-3">Xem tất cả tour</a>
       </div>
-      {% endfor %}
-    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -99,42 +155,75 @@
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold text-primary">Tin tức mới nhất</h2>
-      <p class="text-muted">Cập nhật thông tin du lịch mới nhất mỗi ngày</p>
+      <p class="text-muted">Cập nhật xu hướng du lịch mỗi ngày</p>
     </div>
-    <div class="row">
-      {% for article in news %}
-      <div class="col-md-4 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-          <img src="{{ article.image_url }}" class="card-img-top" alt="{{ article.title }}">
-          <div class="card-body">
-            <h5 class="card-title fw-semibold">{{ article.title }}</h5>
-            <p class="card-text text-muted">{{ article.summary|truncatewords:20 }}</p>
-            <a href="{% url 'news_detail' article.id %}" class="btn btn-outline-primary">Đọc thêm</a>
+
+    {% if news %}
+      <div class="row g-4">
+        {% for article in news %}
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="{{ article.image_url }}" class="card-img-top" alt="{{ article.title }}">
+            <div class="card-body">
+              <h5 class="fw-semibold">{{ article.title }}</h5>
+              <p class="text-muted">{{ article.summary|truncatewords:20 }}</p>
+              <a href="{% url 'news_detail' article.id %}" class="btn btn-outline-primary">Đọc thêm</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="col-12 text-center py-5">
-        <img src="{% static 'images/empty-news.svg' %}" alt="no news" width="150" class="mb-3 opacity-75">
+    {% else %}
+      <div class="text-center py-5">
+        <img src="{% static 'images/empty-news.svg' %}" width="150" class="mb-3 opacity-75">
         <h5 class="fw-bold text-muted">Chưa có tin tức mới nào</h5>
-        <p class="text-muted">Theo dõi các bài viết mới nhất và cập nhật xu hướng du lịch.</p>
+        <p class="text-muted">Theo dõi các bài viết mới nhất của chúng tôi.</p>
         <a href="{% url 'news_list' %}" class="btn btn-primary mt-3">Xem tin tức</a>
       </div>
-      {% endfor %}
-    </div>
+    {% endif %}
   </div>
 </section>
+{% endblock %}
 
-<!-- ✉️ Newsletter -->
-<section class="py-5 text-center bg-gradient bg-primary text-white">
-  <div class="container">
-    <h2 class="fw-bold mb-3">Đăng ký nhận thông tin mới nhất</h2>
-    <p class="lead mb-4">Đừng bỏ lỡ những ưu đãi hấp dẫn và tour hot trong tháng!</p>
-    <form class="d-flex justify-content-center">
-      <input type="email" class="form-control w-50 me-2" placeholder="Nhập email của bạn...">
-      <button class="btn btn-light text-primary fw-semibold">Đăng ký</button>
-    </form>
-  </div>
-</section>
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function setupAutocomplete(inputId, suggestionId, apiUrl) {
+    const input = document.getElementById(inputId);
+    const suggestionBox = document.getElementById(suggestionId);
 
+    input.addEventListener("input", async function () {
+      const query = this.value.trim();
+      suggestionBox.innerHTML = "";
+      if (query.length < 2) return;
+
+      try {
+        const res = await fetch(`${apiUrl}?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        data.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          li.onclick = () => {
+            input.value = item;
+            suggestionBox.innerHTML = "";
+          };
+          suggestionBox.appendChild(li);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!suggestionBox.contains(e.target) && e.target !== input) {
+        suggestionBox.innerHTML = "";
+      }
+    });
+  }
+
+  setupAutocomplete("destination", "destination-suggestions", "{% url 'suggest_destination' %}");
+  setupAutocomplete("city", "city-suggestions", "{% url 'suggest_city' %}");
+});
+</script>
 {% endblock %}

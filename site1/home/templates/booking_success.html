@@ -1,8 +1,21 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="container text-center mt-5">
-    <h2 class="text-success">🎉 Đặt tour thành công!</h2>
-    <p>Cảm ơn bạn đã đặt tour tại website của chúng tôi.</p>
-    <a href="{% url 'profile' %}" class="btn btn-primary mt-3">Xem lịch sử đặt tour</a>
+<link rel="stylesheet" href="{% static 'css/booking_success.css' %}">
+
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">🎉</div>
+        <h2 class="success-title">Đặt tour thành công!</h2>
+        <p class="success-message">
+            Cảm ơn bạn đã tin tưởng và đặt tour tại <strong>TravelTour</strong>.<br>
+            Chúng tôi sẽ sớm liên hệ để xác nhận thông tin.
+        </p>
+
+        <div class="success-buttons">
+            <a href="{% url 'profile' %}" class="btn-primary">Xem lịch sử đặt tour</a>
+            <a href="{% url 'tour_list' %}" class="btn-outline">Tiếp tục khám phá tour</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
