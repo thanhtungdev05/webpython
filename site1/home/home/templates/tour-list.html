@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Danh sách Tours</h3>
+    <form class="d-flex position-relative" method="get" action="{% url 'tour_list' %}">
+      <input id="searchBox" class="form-control me-2" name="q" placeholder="Tìm tour, địa điểm..." value="{{ q }}" autocomplete="off">
+      <button class="btn btn-outline-primary">Tìm</button>
+      <ul id="suggestList" class="list-group position-absolute" style="top:40px; left:0; right:0; z-index:1000;"></ul>
+    </form>
+  </div>
+
+  <div class="row">
+    {% for tour in tours %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ tour.title }}</h5>
+            <p class="card-text text-truncate">{{ tour.schedule|truncatewords:20 }}</p>
+            <p class="text-success fw-bold">Giá: {{ tour.price|floatformat:0 }} VNĐ</p>
+            <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary w-100">Chi tiết</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-warning">Không tìm thấy tour nào cho địa điểm "{{ q }}".</div>
+      {% if similar_tours %}
+        <h5 class="mt-4">Gợi ý tour tương tự:</h5>
+        <div class="row">
+          {% for tour in similar_tours %}
+            <div class="col-md-4 mb-4">
+              <div class="card shadow-sm h-100">
+                <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}">
+                <div class="card-body">
+                  <h5 class="card-title">{{ tour.title }}</h5>
+                  <p class="text-success fw-bold">Giá: {{ tour.price|floatformat:0 }} VNĐ</p>
+                  <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline-primary w-100">Chi tiết</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+const searchBox = document.getElementById("searchBox");
+const suggestList = document.getElementById("suggestList");
+
+searchBox.addEventListener("input", async function() {
+  const query = this.value.trim();
+  if (!query) {
+    suggestList.innerHTML = "";
+    return;
+  }
+  const response = await fetch(`/suggest-destination/?q=${query}`);
+  const suggestions = await response.json();
+  suggestList.innerHTML = suggestions
+    .map(s => `<li class="list-group-item list-group-item-action">${s}</li>`)
+    .join("");
+
+  document.querySelectorAll("#suggestList li").forEach(li => {
+    li.addEventListener("click", () => {
+      searchBox.value = li.textContent;
+      suggestList.innerHTML = "";
+    });
+  });
+});
+</script>
+{% endblock %}

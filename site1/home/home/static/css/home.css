@@ -1,0 +1,185 @@
+/* =======================================
+   🌅 HOME PAGE CUSTOM STYLES - FINAL
+======================================= */
+
+/* ===== Hero Carousel ===== */
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.45);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  max-width: 600px;
+  backdrop-filter: blur(4px);
+  text-align: left;
+}
+
+/* ===== Card Hover Effect ===== */
+.shadow-hover {
+  transition: all 0.3s ease;
+}
+.shadow-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 150, 255, 0.3);
+}
+
+/* ===== Text Enhancements ===== */
+.text-shadow {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* ===== Section Spacing ===== */
+section {
+  scroll-margin-top: 80px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* ===== Gradient Section ===== */
+.bg-gradient {
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+}
+
+/* ===== Newsletter Section ===== */
+.bg-gradient h2,
+.bg-gradient p {
+  color: #fff;
+}
+.bg-gradient input.form-control {
+  border-radius: 8px;
+}
+.bg-gradient button.btn {
+  background: #fff;
+  color: #007bff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.bg-gradient button.btn:hover {
+  background: #e9f3ff;
+  color: #0056b3;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #6c757d;
+}
+.empty-state img {
+  width: 180px;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+.empty-state a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Search Bar Section ===== */
+.hero-search {
+  background: linear-gradient(120deg, #007bff, #00b4d8);
+  padding: 80px 0;
+  position: relative;
+  color: #fff;
+}
+
+.hero-search h1 {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.search-bar {
+  max-width: 1000px;
+  background: #ffffffee;
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.search-bar:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 35px rgba(0, 123, 255, 0.25);
+}
+
+/* ===== Input Styling ===== */
+.search-bar .form-control {
+  border: 1px solid #d1e7ff;
+  transition: border-color 0.2s ease;
+}
+.search-bar .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* ===== Suggestion Box ===== */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0 0 8px 8px;
+  z-index: 1000;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.suggestions li {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.suggestions li:hover {
+  background: #f1f5f9;
+}
+
+/* ===== Buttons ===== */
+.btn-outline-primary {
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+}
+
+/* ===== Cards ===== */
+.card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.card img {
+  height: 220px;
+  object-fit: cover;
+}
+.card-body {
+  padding: 1.25rem;
+}
+.card-title {
+  font-weight: 600;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero-search h1 {
+    font-size: 1.8rem;
+  }
+  .search-bar {
+    padding: 1rem;
+  }
+  .card img {
+    height: 180px;
+  }
+}

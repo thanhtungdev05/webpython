@@ -1,26 +1,99 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h4 class="mb-3">Liên hệ với chúng tôi</h4>
-        <form method="post" action="/contact/">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="name" class="form-label">Họ và tên</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+{% extends 'base.html' %} {% block content %} {% csrf_token %}
+
+<div class="container my-5">
+  <!-- Page Header -->
+  <div class="text-center mb-5">
+    <h2>Liên hệ với chúng tôi</h2>
+    <p class="lead">Bạn có câu hỏi? Chúng tôi rất sẵn lòng lắng nghe bạn.</p>
+  </div>
+
+  <div class="row">
+    <!-- Left Column: Contact Info & Map -->
+    <div class="col-lg-5 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <div class="contact-info-item">
+            <i class="fas fa-map-marker-alt contact-icon"></i>
+            <div>
+              <strong>Địa chỉ:</strong><br />
+              123 Đường Du Lịch, Thành phố A<br />
+              Việt Nam
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+          <div class="contact-info-item">
+            <i class="fas fa-phone contact-icon"></i>
+            <div>
+              <strong>Điện thoại:</strong><br />
+              <a href="tel:+84123456789">(+84) 123 456 789</a>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="message" class="form-label">Nội dung</label>
-            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+          <div class="contact-info-item">
+            <i class="fas fa-envelope contact-icon"></i>
+            <div>
+              <strong>Email:</strong><br />
+              <a href="mailto:info@travelweb.com">info@travelweb.com</a>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary">Gửi liên hệ</button>
-        </form>
+          <hr />
+          <div class="map-responsive mt-4">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.447176333597!2d106.62966381533267!3d10.777019592320761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529d5a6a989ef%3A0x4a6f4b3a73b3c4a6!2zVMOibiBQaMO6LCBUw6JuIFBow7osIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1634371581529!5m2!1svi!2s"
+              width="600"
+              height="450"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Contact Form -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h4 class="mb-4">Gửi tin nhắn cho chúng tôi</h4>
+          <form method="post" action="/contact/">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="name" class="form-label">Họ và tên</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                placeholder="Nhập họ và tên của bạn"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Nhập địa chỉ email"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label">Nội dung</label>
+              <textarea
+                class="form-control"
+                id="message"
+                name="message"
+                rows="5"
+                placeholder="Nội dung bạn muốn gửi..."
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              Gửi liên hệ
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
