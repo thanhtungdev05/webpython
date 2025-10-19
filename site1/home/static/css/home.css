@@ -1,185 +1,201 @@
-/* =======================================
-   🌅 HOME PAGE CUSTOM STYLES - FINAL
-======================================= */
-
-/* ===== Hero Carousel ===== */
-.carousel-caption {
-  background: rgba(0, 0, 0, 0.45);
-  padding: 2rem;
-  border-radius: 0.75rem;
-  max-width: 600px;
-  backdrop-filter: blur(4px);
-  text-align: left;
+:root{
+  --primary-500: #007bff;
+  --accent-500: #00c6ff;
+  --bg-soft: #f7fbff;
+  --card-radius: 14px;
+  --shadow-soft: 0 10px 30px rgba(3, 115, 198, 0.12);
+  --glass: rgba(255,255,255,0.9);
+  --muted: #6c757d;
 }
 
-/* ===== Card Hover Effect ===== */
-.shadow-hover {
-  transition: all 0.3s ease;
-}
-.shadow-hover:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(0, 150, 255, 0.3);
-}
-
-/* ===== Text Enhancements ===== */
-.text-shadow {
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+/* ========== HERO ========== */
+.hero-section { position: relative; margin-bottom: 40px; }
+.hero-img {
+  height: 78vh;
+  object-fit: cover;
+  filter: saturate(1.05) contrast(1.02);
 }
 
-/* ===== Section Spacing ===== */
-section {
-  scroll-margin-top: 80px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+/* caption overlay */
+.hero-caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display:flex;
+  align-items:center;
+  padding: 3rem;
+  pointer-events: none;
 }
-
-/* ===== Gradient Section ===== */
-.bg-gradient {
-  background: linear-gradient(90deg, #007bff, #00b4d8);
-}
-
-/* ===== Newsletter Section ===== */
-.bg-gradient h2,
-.bg-gradient p {
-  color: #fff;
-}
-.bg-gradient input.form-control {
-  border-radius: 8px;
-}
-.bg-gradient button.btn {
-  background: #fff;
-  color: #007bff;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-.bg-gradient button.btn:hover {
-  background: #e9f3ff;
-  color: #0056b3;
-}
-
-/* ===== Empty State ===== */
-.empty-state {
-  text-align: center;
-  padding: 80px 20px;
-  color: #6c757d;
-}
-.empty-state img {
-  width: 180px;
-  opacity: 0.8;
-  margin-bottom: 20px;
-}
-.empty-state a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 500;
-}
-.empty-state a:hover {
-  text-decoration: underline;
-}
-
-/* ===== Search Bar Section ===== */
-.hero-search {
-  background: linear-gradient(120deg, #007bff, #00b4d8);
-  padding: 80px 0;
-  position: relative;
-  color: #fff;
-}
-
-.hero-search h1 {
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.search-bar {
-  max-width: 1000px;
-  background: #ffffffee;
-  backdrop-filter: blur(8px);
+.hero-caption-inner{
+  pointer-events: auto;
+  max-width: 720px;
+  background: linear-gradient(135deg, rgba(0,123,255,0.18), rgba(0,198,255,0.08));
+  padding: 28px;
   border-radius: 16px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 32px rgba(2,66,120,0.12);
 }
 
-.search-bar:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 35px rgba(0, 123, 255, 0.25);
+.hero-title{
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.35);
 }
 
-/* ===== Input Styling ===== */
-.search-bar .form-control {
-  border: 1px solid #d1e7ff;
-  transition: border-color 0.2s ease;
-}
-.search-bar .form-control:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+.hero-sub{
+  color: #f6fbff;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
 }
 
-/* ===== Suggestion Box ===== */
+/* CTA buttons */
+.hero-ctas .btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.hero-ctas .btn-outline-light {
+  border-color: rgba(255,255,255,0.35);
+  color: #fff;
+}
+
+/* carousel controls: subtle */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.25));
+}
+
+/* ========== SEARCH CARD (S2) ========== */
+.search-section {
+  margin-top: -48px;
+  z-index: 50;
+  position: relative;
+}
+.search-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), var(--glass));
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 1100px;
+  margin-top: 0;
+  border: 1px solid rgba(0,123,255,0.08);
+  box-shadow: var(--shadow-soft);
+}
+
+/* suggestions dropdown */
 .suggestions {
   position: absolute;
-  top: 100%;
   left: 0;
   right: 0;
   background: #fff;
-  border: 1px solid #ddd;
-  border-top: none;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 6px 18px rgba(3,115,198,0.08);
+  margin-top: 4px;
   list-style: none;
-  margin: 0;
   padding: 0;
-  border-radius: 0 0 8px 8px;
-  z-index: 1000;
-  max-height: 220px;
+  z-index: 1200;
+  max-height: 180px;
   overflow-y: auto;
 }
-
 .suggestions li {
-  padding: 10px 12px;
+  padding: 8px 12px;
   cursor: pointer;
-  transition: all 0.2s;
 }
-.suggestions li:hover {
-  background: #f1f5f9;
-}
+.suggestions li:hover { background: #f6f9ff; }
 
-/* ===== Buttons ===== */
-.btn-outline-primary {
-  border-width: 2px;
-  transition: all 0.3s ease;
-}
-.btn-outline-primary:hover {
-  background-color: #007bff;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-}
+/* input-group icons */
+.input-group-text { background: transparent; border: none; color: var(--primary-500); font-size: 1.05rem; }
+.form-control { border-radius: 10px; box-shadow: none; }
 
-/* ===== Cards ===== */
-.card {
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-.card img {
-  height: 220px;
-  object-fit: cover;
-}
-.card-body {
-  padding: 1.25rem;
-}
-.card-title {
+/* search button */
+.search-card .btn-primary {
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,123,255,0.15);
   font-weight: 600;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .hero-search h1 {
-    font-size: 1.8rem;
-  }
-  .search-bar {
-    padding: 1rem;
-  }
-  .card img {
-    height: 180px;
-  }
+/* ========== TOUR CARD (slight polish) ========== */
+.card {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+.card img { height: 220px; object-fit: cover; }
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 38px rgba(0,123,255,0.12);
+}
+
+/* ========== TESTIMONIAL SLIDER ========== */
+.testimonials-section { background: var(--bg-soft); }
+
+.testimonial-slider {
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: block;
+  padding: 10px 0;
+}
+.testimonial-slider .testi-item {
+  width:100%;
+  box-sizing: border-box;
+  padding: 12px;
+  position: relative;
+}
+
+/* avatar */
+.testi-avatar { width:48px; height:48px; object-fit:cover; }
+
+/* dots */
+.testi-dots { display:flex; gap:8px; }
+.testi-dot {
+  width:10px; height:10px; border-radius:50%; border:none;
+  background: rgba(0,0,0,0.15); transition: all .2s;
+  cursor:pointer;
+}
+.testi-dot.active { transform: scale(1.25); background: var(--primary-500); box-shadow: 0 4px 12px rgba(0,123,255,0.18); }
+
+/* controls spacing */
+.testimonial-controls .btn { border-radius: 10px; }
+
+/* ========== CONTACT CTA ========== */
+.contact-cta {
+  margin-top: 28px;
+}
+.contact-cta-card {
+  background: linear-gradient(90deg, rgba(0,198,255,0.08), rgba(0,123,255,0.04));
+  border-radius: 14px;
+  align-items: center;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 991px){
+  .hero-caption { padding: 1.5rem; }
+  .hero-caption-inner { padding: 18px; }
+  .hero-img { height: 55vh; }
+  .search-card { padding: 16px; margin: 0 12px; }
+  .testimonial-controls { display: none !important; }
+}
+
+@media (max-width: 575px){
+  .hero-title { font-size: 1.4rem; }
+  .hero-sub { font-size: 0.95rem; }
+  .testi-avatar { width:40px; height:40px; }
+  .search-card .btn-lg { padding: 10px 12px; font-size: 0.95rem; }
+}
+.hero-search {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  padding: 3rem 0;
+  position: relative;
+  margin-top: -10px; /* giảm kéo */
+  z-index: 2;
+}
+.hero-search + section {
+  margin-top: 40px !important; /* đẩy section tiếp theo xuống */
+}
+section.py-5 {
+  margin-top: 40px;
 }

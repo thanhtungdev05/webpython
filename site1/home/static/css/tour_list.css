@@ -1,30 +1,156 @@
 /* Tour list specific styles */
-:root{ --accent:#0077b6; --accent-2:#00b4d8; --muted:#6c757d }
+:root {
+  --accent: #0077b6;
+  --accent-2: #00b4d8;
+  --muted: #6c757d;
+}
 
+.container {
+  max-width: 1200px;
+}
 
-.container{ max-width:1200px }
-.page-title{ color:var(--accent); font-weight:700 }
+.page-title {
+  color: var(--accent);
+  font-weight: 700;
+}
 
+/* SEARCH FORM */
+.search-form {
+  width: 420px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 50px;
+  box-shadow: 0 6px 18px rgba(2, 46, 86, 0.08);
+  position: relative;
+  z-index: 10; /* đảm bảo form luôn trên cùng */
+}
 
-.search-form{ width:420px; background:#fff; padding:6px; border-radius:50px; box-shadow:0 6px 18px rgba(2,46,86,0.08); }
-.search-form .form-control{ border:none; padding:12px 16px }
-.btn-search{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; border:none; padding:8px 18px; border-radius:40px }
+.search-form .form-control {
+  border: none;
+  padding: 12px 16px;
+}
 
+.btn-search {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 40px;
+}
 
-.suggestions{ top:46px; left:0; right:0; max-height:220px; overflow:auto; border-radius:8px }
-.suggestions li{ cursor:pointer }
+/* SUGGESTIONS DROPDOWN */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e3e6ea;
+  border-radius: 0 0 12px 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  z-index: 1000; /* đảm bảo hiển thị lên trên tour cards */
+}
 
+.suggestions li {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
 
-.tour-card{ border-radius:14px; overflow:hidden; border:0; box-shadow:0 6px 20px rgba(3,62,138,0.06); transition:transform .28s,box-shadow .28s }
-.tour-card:hover{ transform:translateY(-8px); box-shadow:0 18px 40px rgba(3,62,138,0.12) }
-.card-media img{ width:100%; height:220px; object-fit:cover }
-.card-title{ font-size:1.05rem; color:#023e8a }
-.card-meta{ font-size:0.9rem; color:var(--muted) }
-.price{ font-weight:700; color:#0b8457 }
-.small-card{ border-radius:10px; overflow:hidden }
+.suggestions li:hover {
+  background-color: #f1faff;
+}
 
+/* TOUR CARDS */
+.tour-card {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 0;
+  box-shadow: 0 6px 20px rgba(3, 62, 138, 0.06);
+  transition: transform 0.28s, box-shadow 0.28s;
+}
 
-.empty-state img{ opacity:0.85 }
+.tour-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(3, 62, 138, 0.12);
+}
 
+.card-media img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
 
-@media (max-width:768px){ .search-form{ width:100% } .card-media img{ height:180px } }
+.card-title {
+  font-size: 1.05rem;
+  color: #023e8a;
+}
+
+.card-meta {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.price {
+  font-weight: 700;
+  color: #0b8457;
+}
+
+.small-card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.empty-state img {
+  opacity: 0.85;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .search-form {
+    width: 100%;
+  }
+
+  .card-media img {
+    height: 180px;
+  }
+}
+/* 🔧 FIX suggestions bị che bởi card */
+.search-form {
+  position: relative;
+  z-index: 1001; /* đảm bảo nằm trên mọi card */
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 2000; /* cao hơn mọi thành phần */
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.suggestions li {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.suggestions li:hover {
+  background-color: #f1faff;
+}
+
+/* ⚙️ Đảm bảo phần chứa tour không chặn dropdown */
+.row, .container {
+  position: relative;
+  z-index: 1;
+  overflow: visible !important; /* ngăn card cắt phần gợi ý */
+}

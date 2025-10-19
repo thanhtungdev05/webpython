@@ -24,70 +24,70 @@ def home(request):
         'news': news,})
 
 
-def tour_list(request):
-    # Lấy dữ liệu từ form GET
     q = request.GET.get('q', '').strip()
     destination = request.GET.get('destination', '').strip()
     city = request.GET.get('city', '').strip()
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-    tours = Tour.objects.all()
+    tours = Tour.objects.select_related('destination').all()
 
-    # --- Lọc theo ô tìm kiếm ---
+    # --- Lọc theo từ khóa chung ---
     if q:
         tours = tours.filter(
             Q(title__icontains=q) |
             Q(destination__name__icontains=q) |
-            Q(destination__location__icontains=q)
+            Q(schedule__icontains=q)
         )
 
-    # --- Lọc riêng theo trường ---
+    # --- Lọc theo địa điểm ---
     if destination:
         tours = tours.filter(destination__name__icontains=destination)
+
+    # --- Lọc theo thành phố ---
     if city:
-        tours = tours.filter(destination__location__icontains=city)
+        tours = tours.filter(destination__city__icontains=city)
+
+    # --- Lọc theo giá ---
     if min_price:
         tours = tours.filter(price__gte=min_price)
     if max_price:
         tours = tours.filter(price__lte=max_price)
 
-    # --- Nếu không có kết quả, gợi ý 3 tour rẻ nhất ---
-    similar_tours = None
-    if not tours.exists():
-        similar_tours = Tour.objects.order_by('price')[:3]
+    # --- Lọc theo ngày ---
+    if start_date:
+        tours = tours.filter(start_date__gte=start_date)
+    if end_date:
+        tours = tours.filter(end_date__lte=end_date)
 
-    return render(request, 'tour_list.html', {
+    # --- Gợi ý nếu không có kết quả ---
+    similar_tours = None
+    if not tours.exists() and (q or destination):
+        similar_tours = Tour.objects.filter(featured=True)[:3]
+
+    context = {
         'tours': tours,
+        'similar_tours': similar_tours,
         'q': q,
         'destination': destination,
-        'city': city,
-        'min_price': min_price,
-        'max_price': max_price,
-        'similar_tours': similar_tours
-    })
+    }
 
+    return render(request, 'tour-list.html', context)
 # --- API gợi ý địa điểm khi gõ từ khóa ---
 def suggest_destination(request):
-    q = request.GET.get('q', '').strip()
-    suggestions = []
-    if q:
-        destinations = Destination.objects.filter(name__icontains=q).values_list('name', flat=True)[:5]
-        suggestions = list(destinations)
+    q = request.GET.get('q', '')
+    if not q:
+        return JsonResponse([], safe=False)
+    suggestions = list(
+        Destination.objects.filter(name__icontains=q)
+        .values_list('name', flat=True)[:8]
+    )
     return JsonResponse(suggestions, safe=False)
 
 
-# --- API gợi ý địa điểm khi gõ (autocomplete) ---
-def suggest_destination(request):
-    query = request.GET.get('q', '').strip()
-    results = []
-    if query:
-        results = list(
-            Destination.objects.filter(name__icontains=query)
-            .values_list('name', flat=True)
-            .distinct()[:5]
-        )
-    return JsonResponse(results, safe=False)
+
 
 
 
@@ -196,7 +196,7 @@ def user_logout(request):
 
 def tour_list(request):
     tours = Tour.objects.all()
-
+    query = request.GET.get('q') or request.GET.get('destination') or request.GET.get('city')
     destination = request.GET.get('destination')
     city = request.GET.get('city')
     price_min = request.GET.get('price_min')
@@ -205,7 +205,9 @@ def tour_list(request):
     end_date = request.GET.get('end_date')
 
     if destination:
-        tours = tours.filter(name__icontains=destination)
+        tours = tours.filter(destination__name__icontains=destination)
+    if query:
+        tours = tours.filter(destination__name__icontains=query)
     if city:
         tours = tours.filter(city__icontains=city)
     if price_min:
