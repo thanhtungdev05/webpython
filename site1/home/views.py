@@ -95,7 +95,17 @@ def suggest_destination(request):
 def tour_detail(request, id):
     tour = get_object_or_404(Tour, id=id)
     related_tours = Tour.objects.filter(destination=tour.destination).exclude(id=tour.id)[:3]
-    return render(request, 'tour-detail.html', {'tour': tour, 'related_tours': related_tours})
+
+    # 🔹 Format giá tiền ở đây
+    if tour.price is not None:
+        tour.price = f"{tour.price:,.0f}".replace(",", ".")  # Ví dụ: 34.762.894
+    else:
+        tour.price = "Liên hệ"
+
+    return render(request, 'tour-detail.html', {
+        'tour': tour,
+        'related_tours': related_tours
+    })
 
 # ... các import khác đã có
 
@@ -196,6 +206,7 @@ def user_logout(request):
 
 def tour_list(request):
     tours = Tour.objects.all()
+
     query = request.GET.get('q') or request.GET.get('destination') or request.GET.get('city')
     destination = request.GET.get('destination')
     city = request.GET.get('city')
@@ -204,6 +215,7 @@ def tour_list(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
+    # Bộ lọc
     if destination:
         tours = tours.filter(destination__name__icontains=destination)
     if query:
@@ -219,7 +231,22 @@ def tour_list(request):
     if end_date:
         tours = tours.filter(end_date__lte=end_date)
 
-    return render(request, 'tour-list.html', {'tours': tours})
+    # Format lại price để hiển thị đẹp trong template
+        # Format giá
+    for tour in tours:
+        if tour.price is not None:
+            # Ghi đè lại giá để template vẫn dùng {{ tour.price }}
+            tour.price = f"{tour.price:,.0f}".replace(",", ".")
+        else:
+            tour.price = "Liên hệ"
+
+
+    return render(request, 'tour-list.html', {
+        'tours': tours,
+        'query': query,
+        'destination': destination,
+        'city': city
+    })
 def suggest_destination(request):
     query = request.GET.get('q', '')
     results = []

@@ -31,7 +31,7 @@
             <p class="card-text text-truncate">{{ tour.schedule|truncatewords:18 }}</p>
 
             <div class="d-flex align-items-center mt-3">
-              <div class="price fw-bold text-success">{{ tour.price|floatformat:0 }} VNĐ</div>
+              <div class="price fw-bold text-success">{{ tour.price }} VNĐ</div>
               <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary btn-sm ms-auto">Chi tiết</a>
             </div>
           </div>

@@ -68,21 +68,22 @@
       </div>
     </div>
 
-    <!-- 💳 Cột phải: thông tin đặt tour -->
-    <div class="col-md-4">
-      <div class="booking-card shadow-sm">
-        <h5 class="fw-bold mb-2">Đặt Tour Ngay</h5>
-        <p class="price-tag">{{ tour.price|floatformat:0 }} VNĐ</p>
-        <p><strong>Thời lượng:</strong> {{ tour.duration }}</p>
-        <p><strong>Địa điểm:</strong> {{ tour.destination.name }}</p>
+<!-- 💳 Cột phải: thông tin đặt tour -->
+<div class="col-md-4">
+  <div class="booking-card shadow-sm">
+    <h5 class="fw-bold mb-2">Đặt Tour Ngay</h5>
+    <p class="price-tag">{{ tour.price }} VNĐ</p>
+    <p><strong>Thời lượng:</strong> {{ tour.duration }}</p>
+    <p><strong>Địa điểm:</strong> {{ tour.destination.name }}</p>
 
-        <form method="post" action="{% url 'booking' %}">
-  {% csrf_token %}
-  <input type="hidden" name="tour_id" value="{{ tour.id }}">
-  {{ form.as_p }}
-  <button class="btn btn-success w-100 mt-2">Đặt ngay</button>
-</form>
-      </div>
+    <form method="post" action="{% url 'booking' %}">
+      {% csrf_token %}
+      <input type="hidden" name="tour_id" value="{{ tour.id }}">
+      {{ form.as_p }}
+      <button class="btn btn-success w-100 mt-2">Đặt ngay</button>
+    </form>
+  </div>
+</div>
 
       <div class="contact-card mt-4">
         <h6>Liên hệ hỗ trợ</h6>
