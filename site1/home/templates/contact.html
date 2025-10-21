@@ -1,101 +1,267 @@
-{% extends 'base.html' %} {% block content %} {% csrf_token %}
+{% extends 'base.html' %} {% load static %} {% block content %} {% csrf_token %}
 
-<div class="container my-5">
+<!-- Thêm CSS trực tiếp trong block content -->
+<link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+
+<div class="contact-page">
   <!-- Page Header -->
-  <div class="text-center mb-5">
-    <h2>Liên hệ với chúng tôi</h2>
-    <p class="lead">Bạn có câu hỏi? Chúng tôi rất sẵn lòng lắng nghe bạn.</p>
+  <div class="contact-header text-center">
+    <h1 class="contact-title">LIÊN HỆ</h1>
+    <p class="contact-subtitle">
+      Để có thể đáp ứng được các yêu cầu và đóng góp ý kiến của quý khách, xin
+      vui lòng gửi thông tin
+      <br />hoặc gọi đến hotline các chi nhánh bên dưới để liên hệ một cách
+      nhanh chóng
+    </p>
+  </div>
+  
+ <!-- ✅ THÊM SOCIAL LINKS Ở ĐÂY (sau contact-subtitle) -->
+    <div class="social-links">
+      <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-icon youtube"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+    </div>
   </div>
 
-  <div class="row">
-    <!-- Left Column: Contact Info & Map -->
-    <div class="col-lg-5 mb-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <div class="contact-info-item">
-            <i class="fas fa-map-marker-alt contact-icon"></i>
-            <div>
-              <strong>Địa chỉ:</strong><br />
-              123 Đường Du Lịch, Thành phố A<br />
-              Việt Nam
-            </div>
-          </div>
-          <div class="contact-info-item">
-            <i class="fas fa-phone contact-icon"></i>
-            <div>
-              <strong>Điện thoại:</strong><br />
-              <a href="tel:+84123456789">(+84) 123 456 789</a>
-            </div>
-          </div>
-          <div class="contact-info-item">
-            <i class="fas fa-envelope contact-icon"></i>
-            <div>
-              <strong>Email:</strong><br />
-              <a href="mailto:info@travelweb.com">info@travelweb.com</a>
-            </div>
-          </div>
-          <hr />
-          <div class="map-responsive mt-4">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.447176333597!2d106.62966381533267!3d10.777019592320761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529d5a6a989ef%3A0x4a6f4b3a73b3c4a6!2zVMOibiBQaMO6LCBUw6JuIFBow7osIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1634371581529!5m2!1svi!2s"
-              width="600"
-              height="450"
-              style="border: 0"
-              allowfullscreen=""
-              loading="lazy"
-            ></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="contact-container">
+    <div class="contact-row">
+      <!-- Left: Contact Form -->
+      <div class="contact-form-section">
+        <div class="contact-card">
+          <h3 class="section-title">THÔNG TIN LIÊN LẠC</h3>
 
-    <!-- Right Column: Contact Form -->
-    <div class="col-lg-7">
-      <div class="card shadow-sm">
-        <div class="card-body p-4">
-          <h4 class="mb-4">Gửi tin nhắn cho chúng tôi</h4>
-          <form method="post" action="/contact/">
+          <form method="post" action="{% url 'contact' %}" class="contact-form">
             {% csrf_token %}
-            <div class="mb-3">
-              <label for="name" class="form-label">Họ và tên</label>
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                placeholder="Nhập họ và tên của bạn"
-                required
-              />
+
+            <!-- Row 1 -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label"
+                  >Loại thông tin <span class="required">*</span></label
+                >
+                <select class="form-input" name="category" required>
+                  <option>Du lịch</option>
+                  <option>Visa</option>
+                  <option>Vé máy bay</option>
+                  <option>Khác</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  >Họ tên <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  name="name"
+                  placeholder="Liên hệ"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  >Email <span class="required">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-input"
+                  name="email"
+                  placeholder="Nhập email"
+                  required
+                />
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="Nhập địa chỉ email"
-                required
-              />
+
+            <!-- Row 2 -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label"
+                  >Điện thoại <span class="required">*</span></label
+                >
+                <input
+                  type="tel"
+                  class="form-input"
+                  name="phone"
+                  placeholder="Nhập số điện thoại"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên công ty</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  name="company"
+                  placeholder="Nhập tên công ty"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Số khách</label>
+                <input
+                  type="number"
+                  class="form-input"
+                  name="guests"
+                  placeholder="0"
+                  value="0"
+                />
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="message" class="form-label">Nội dung</label>
-              <textarea
-                class="form-control"
-                id="message"
-                name="message"
-                rows="5"
-                placeholder="Nội dung bạn muốn gửi..."
-                required
-              ></textarea>
+
+            <!-- Row 3 -->
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label class="form-label">Địa chỉ</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  name="address"
+                  placeholder="Nhập địa chỉ"
+                />
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">
-              Gửi liên hệ
-            </button>
+
+            <!-- Row 4 -->
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label class="form-label"
+                  >Tiêu đề <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  name="subject"
+                  placeholder="Nhập tiêu đề"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Row 5 -->
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label class="form-label"
+                  >Nội dung <span class="required">*</span></label
+                >
+                <textarea
+                  class="form-input form-textarea"
+                  name="message"
+                  placeholder="Nhập nội dung"
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-footer">
+              <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+              <button type="submit" class="btn-submit">Gửi ngay</button>
+            </div>
           </form>
         </div>
       </div>
+
+      <!-- Right: Branch Info -->
+      <div class="branch-section">
+        <div class="branch-card">
+          <h3 class="section-title">CHI NHÁNH TOÀN CẦU</h3>
+
+          <!-- Branch Buttons -->
+          <div class="branch-tabs">
+            <button class="branch-tab active">TP.Hồ Chí Minh</button>
+            <button class="branch-tab">Miền Bắc</button>
+            <button class="branch-tab">Miền Trung</button>
+            <button class="branch-tab">Tây Nguyên</button>
+            <button class="branch-tab">Đông Nam Bộ</button>
+            <button class="branch-tab">Miền Tây</button>
+            <button class="branch-tab">Nước ngoài</button>
+          </div>
+
+          <div class="branch-divider"></div>
+
+          <!-- Branch 1 -->
+          <div class="branch-item">
+            <h4 class="branch-title">TRỤ SỞ CHÍNH</h4>
+            <div class="branch-detail">
+              <i class="fas fa-map-marker-alt"></i>
+              <span
+                >190 Pasteur, Phường Xuân Hoà, TP. Hồ Chí Minh, Việt Nam</span
+              >
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-phone"></i>
+              <span>Hotline: (84-28) 38 668 999 (20 lines)</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-fax"></i>
+              <span>Fax: (84-28) 38 29 9142</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-envelope"></i>
+              <span
+                >Email: info@vietravel.com - info.asia@vietravel.com (English
+                Support)</span
+              >
+            </div>
+          </div>
+
+          <!-- Branch 2 -->
+          <div class="branch-item">
+            <h4 class="branch-title">PHÒNG ĐĂNG KÝ DU LỊCH CHỢ LỚN</h4>
+            <div class="branch-detail">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>86A Châu Văn Liêm, Phường Chợ Lớn, TP. Hồ Chí Minh</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-phone"></i>
+              <span>Hotline: [84.28] 35 358 709</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-fax"></i>
+              <span>Fax:</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-envelope"></i>
+              <span>Email: vtv.cholon@vietravel.com</span>
+            </div>
+          </div>
+
+          <!-- Branch 3 -->
+          <div class="branch-item">
+            <h4 class="branch-title">PHÒNG ĐĂNG KÝ DU LỊCH QUẬN 11</h4>
+            <div class="branch-detail">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>1475 Đường 3/2, Phường Minh Phụng, TP. Hồ Chí Minh</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-phone"></i>
+              <span>Hotline: (84-28) 39 699 439</span>
+            </div>
+            <div class="branch-detail">
+              <i class="fas fa-fax"></i>
+              <span>Fax:</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- ✅ THÊM MAP -->
+<div class="branch-card mt-3">
+  <h3 class="section-title">VỊ TRÍ TRÊN BẢN ĐỒ</h3>
+  <div class="map-responsive">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.3193500466957!2d106.69217931533417!3d10.786834892314186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f38f9ed887b%3A0x14aded5703768989!2s190%20Pasteur%2C%20Ph%C6%B0%E1%BB%9Dng%206%2C%20Qu%E1%BA%ADn%203%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh!5e0!3m2!1svi!2s!4v1234567890"
+      width="100%"
+      height="300"
+      style="border: 0"
+      allowfullscreen=""
+      loading="lazy"
+    >
+    </iframe>
   </div>
 </div>
 {% endblock %}
