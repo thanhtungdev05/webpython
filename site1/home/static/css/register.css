@@ -163,3 +163,17 @@ body {
 .register-form ul.helptext,
 .register-form ul.helptext li {
   color: rgba(0, 0, 0, 0.45); /* Mờ hơn nữa */
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-left: 15px;
+  list-style: disc;
+  font-style: italic;
+}
+
+/* Đảm bảo canh chỉnh đẹp */
+.register-form ul.helptext {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding-left: 18px;
+}
+
