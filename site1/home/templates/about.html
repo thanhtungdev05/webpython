@@ -1,9 +1,140 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}giới thiệu - Travel & Tourism{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}?v=2">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-    <h1>Giới thiệu về chúng tôi</h1>
-    <p>Chào mừng bạn đến với trang web du lịch của chúng tôi! 🌍</p>
-    <p>Chúng tôi cung cấp các tour hấp dẫn, giá hợp lý và trải nghiệm tuyệt vời.</p>
-</div>
+
+<section class="intro-section">
+  <div class="intro-text container">
+    <h2>Về Chúng Tôi</h2>
+    <p>
+      Chúng tôi tự hào là đơn vị tiên phong trong lĩnh vực du lịch, với sứ mệnh
+      mang lại những hành trình ý nghĩa và trải nghiệm đáng nhớ cho mọi khách hàng.
+    </p>
+    <p>
+      Với mạng lưới văn phòng trên toàn quốc, luôn nỗ lực phát triển
+      để mang đến cơ hội nghề nghiệp và chuyến đi mơ ước cho bạn.
+    </p>
+  </div>
+</section>
+
+<section class="career-section">
+  <div class="container text-center">
+    <h3 class="mb-4 text-white fw-bold">ĐI MUÔN NƠI CÙNG Travel & Tourism</h3>
+    <div class="career-grid">
+      <div class="career-item"><img src="{% static 'icons/taynambo.png' %}" alt=""><p>TÂY NAM BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/tphcm.png' %}" alt=""><p>TP.HCM</p></div>
+      <div class="career-item"><img src="{% static 'icons/dongnambo.png' %}" alt=""><p>ĐÔNG NAM BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/namtrungbo.png' %}" alt=""><p>NAM TRUNG BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/taynguyen.png' %}" alt=""><p>TÂY NGUYÊN</p></div>
+      <div class="career-item"><img src="{% static 'icons/bactrungbo.png' %}" alt=""><p>BẮC TRUNG BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/bacbo.png' %}" alt=""><p>BẮC BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/hanoi.png' %}" alt=""><p>HÀ NỘI</p></div>
+      <div class="career-item"><img src="{% static 'icons/global.png' %}" alt=""><p>VĂN PHÒNG NƯỚC NGOÀI</p></div>
+    </div>
+
+    <!-- Nút Xem thêm -->
+    <a href="{% url 'tour_list' %}" class="btn-view">Xem thêm</a>
+  </div>
+</section>
+
+<section class="story-section">
+  <div class="container">
+    <h3 class="text-center fw-bold mb-4 text-primary">CÂU CHUYỆN</h3>
+    <div class="story-content">
+      <div class="story-image">
+        <img src="{% static 'images/door.jpg' %}" alt="">
+      </div>
+      <div class="story-text">
+        <h4>Cánh cửa sự nghiệp</h4>
+        <p>
+          Tuổi trẻ luôn ẩn chứa vô vàn khả năng tiềm ẩn, và Travel & Tourism chính là nơi mở ra
+          cánh cửa tương lai cho bạn. Hãy chọn và bước qua cánh cửa sự nghiệp của riêng mình!
+        </p>
+      </div>
+    </div>
+
+    <div class="story-gallery">
+      <img src="{% static 'images/story1.jpg' %}" alt="">
+      <img src="{% static 'images/story2.jpg' %}" alt="">
+      <img src="{% static 'images/story3.jpg' %}" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- Thêm hiệu ứng JS -->
+<script>
+const counters = document.querySelectorAll('.counter');
+const speed = 100;
+counters.forEach(counter => {
+  const updateCount = () => {
+    const target = +counter.getAttribute('data-target');
+    const count = +counter.innerText;
+    const inc = target / speed;
+    if (count < target) {
+      counter.innerText = Math.ceil(count + inc);
+      setTimeout(updateCount, 10);
+    } else {
+      counter.innerText = target.toLocaleString();
+    }
+  };
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) updateCount();
+    });
+  });
+  observer.observe(counter);
+});
+document.querySelectorAll('.story-gallery img').forEach(img => {
+  img.addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox';
+    overlay.innerHTML = `<img src="${img.src}" alt="" class="lightbox-img">`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', () => overlay.remove());
+  });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  // Hover phóng to icon
+  const items = document.querySelectorAll(".career-item");
+  items.forEach(item => {
+    item.addEventListener("mouseenter", () => {
+      item.style.transform = "scale(1.1)";
+      item.style.transition = "transform 0.3s";
+    });
+    item.addEventListener("mouseleave", () => {
+      item.style.transform = "scale(1)";
+    });
+  });
+
+  // Fade-in khi cuộn
+  const fadeEls = document.querySelectorAll(".career-item, .story-section img, .story-text");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("fade-in");
+      }
+    });
+  }, { threshold: 0.1 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  // Hiệu ứng mờ dần khi bấm "Xem thêm"
+  const btn = document.querySelector(".btn-view");
+  if (btn) {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.style.transition = "opacity 0.5s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => {
+        window.location.href = btn.href;
+      }, 400);
+    });
+  }
+});
+</script>
 {% endblock %}
