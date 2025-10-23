@@ -1,0 +1,177 @@
+/* Về chúng tôi - Giao diện Vietravel */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.intro-section {
+  background: #ffffff;
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.intro-section h2 {
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #004080;
+}
+
+.intro-section p {
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto 10px;
+  line-height: 1.7;
+}
+
+.career-section {
+  background: linear-gradient(90deg, #003366, #0a2e47);
+  padding: 80px 0;
+  color: #fff;
+}
+
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 30px;
+  justify-items: center;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
+
+.career-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.career-item img {
+  width: 60px;
+  margin-bottom: 10px;
+  filter: brightness(0) invert(1);
+}
+
+.career-item p {
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.btn-view {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  transition: all 0.3s;
+}
+
+.btn-view:hover {
+  background: #0056b3;
+}
+
+.story-section {
+  background: #fff;
+  padding: 80px 0;
+}
+
+.story-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.story-image img {
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.story-text {
+  flex: 1;
+  color: #444;
+}
+
+.story-text h4 {
+  color: #004080;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.story-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.story-gallery img {
+  width: 220px;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.story-gallery img:hover {
+  transform: scale(1.05);
+}
+.career-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+.btn-view {
+  display: inline-block;
+  padding: 10px 24px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-view:hover {
+  background-color: #0056b3;
+}
+/* Fade-in hiệu ứng khi cuộn */
+.career-item, .story-section img, .story-text {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-in-out;
+}
+
+.fade-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Nút xem thêm */
+.btn-view {
+  background-color: #15130c;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  margin-top: 24px;
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.btn-view:hover {
+  background-color: #e5ff00;
+  transform: scale(1.05);
+}
+.stats-section { background: #f0f8ff; padding: 60px 0; }
+.stats-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.counter { font-size: 2.5rem; color: #004080; font-weight: bold; }
+.stats-section p { color: #333; }
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 9999;
+}
+.lightbox-img { max-width: 90%; max-height: 80%; border-radius: 10px; }

@@ -76,7 +76,7 @@
     <p><strong>Thời lượng:</strong> {{ tour.duration }}</p>
     <p><strong>Địa điểm:</strong> {{ tour.destination.name }}</p>
 
-    <form method="post" action="{% url 'booking' %}">
+    <form action="{% url 'booking_view' tour.id %}" method="POST">
       {% csrf_token %}
       <input type="hidden" name="tour_id" value="{{ tour.id }}">
       {{ form.as_p }}

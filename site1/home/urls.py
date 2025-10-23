@@ -14,8 +14,9 @@ urlpatterns = [
     path('destination/<int:dest_id>/', views.tour_from_destination, name='tour_from_destination'),
 
     # 🧾 Đặt tour
-    path('booking/', views.booking_view, name='booking'),
+    path('booking/<int:tour_id>/', views.booking_view, name='booking_view'),
     path('booking/success/', views.booking_success, name='booking_success'),
+    path('booking/<int:tour_id>/', views.booking_view, name='booking_view'),
 
     # 📰 Tin tức
     path('news/', views.news_list, name='news_list'),
@@ -32,10 +33,13 @@ urlpatterns = [
     path('profile/approve-booking/', views.approve_booking_ajax, name='approve_booking_ajax'),
     path('profile/cancel-booking/', views.cancel_booking_ajax, name='cancel_booking_ajax'),
 
-
-    # 🧑‍💼 Admin duyệt / hủy (cho admin)
+    # 🧑‍💼 Admin duyệt / hủy
     path('approve/<int:booking_id>/', views.approve_booking, name='approve_booking'),
     path('cancel/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+
+    # 💵 Thanh toán
+    path('pay_cash/', views.pay_cash, name='pay_cash'),
+    path('payment/qr/<int:booking_id>/', views.payment_qr, name='payment_qr'),
 
     # 📞 Giới thiệu & liên hệ
     path('about/', views.about, name='about'),

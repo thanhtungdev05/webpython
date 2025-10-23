@@ -9,10 +9,11 @@ from .forms import ContactForm, BookingForm, NewsForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Tour, News  # đổi lại đúng tên model của bạn
 from .forms import UserRegisterForm, UserLoginForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django import template
+from django.views.decorators.csrf import csrf_exempt
 # --- Trang chủ ---
 def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
@@ -117,7 +118,7 @@ def tour_from_destination(request, dest_id):
 
 # --- Đặt tour ---
 @login_required
-def booking_view(request):
+def booking_view(request, tour_id):
     if request.method == 'POST':
         tour_id = request.POST.get('tour_id')
         tour = get_object_or_404(Tour, id=tour_id)
@@ -154,13 +155,12 @@ def contact(request):
 
 # --- Danh sách tin tức ---
 def news_list(request):
-    news = News.objects.filter(is_published=True).order_by('-published_at')
-    return render(request, 'news.html', {'news_list': news})
-
+    news_list = News.objects.filter(is_published=True).order_by('-published_at')
+    return render(request, 'news.html', {'news_list': news_list})
 
 def news_detail(request, slug):
-    item = get_object_or_404(News, slug=slug)
-    return render(request, 'news-detail.html', {'news_item': item})
+    news = get_object_or_404(News, slug=slug)
+    return render(request, 'news_detail.html', {'news': news})
 
 
 # --- Đăng ký ---
@@ -334,16 +334,35 @@ def approve_booking_ajax(request):
 # 🔴 AJAX: Hủy đơn (cho user)
 # -----------------------
 @login_required
+@csrf_exempt
 def cancel_booking_ajax(request):
     if request.method == "POST":
         booking_id = request.POST.get("booking_id")
         try:
-            booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-            booking.delete()  # xóa luôn khỏi DB
+            booking = Booking.objects.get(id=booking_id, user=request.user)
+            booking.status = "Hủy"
+            booking.save()
             return JsonResponse({"success": True})
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)})
-    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ"})
+        except Booking.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Không tìm thấy đơn đặt!"})
+    return JsonResponse({"success": False, "error": "Yêu cầu không hợp lệ."})
+# 💵 Thanh toán tiền mặt
+def pay_cash(request):
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        if booking.status == "Duyệt":
+            booking.status = "Đã thanh toán"
+            booking.save()
+            return JsonResponse({"success": True})
+        return JsonResponse({"success": False, "error": "Chỉ có thể thanh toán tour đã duyệt!"})
+    return JsonResponse({"success": False, "error": "Phương thức không hợp lệ."})
+
+# 💳 Cổng thanh toán QR (giả lập)
+def payment_qr(request, booking_id):
+    amount = request.GET.get("amount", 0)
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    return render(request, "payment_qr.html", {"booking": booking, "amount": amount})
 
 # -----------------------
 # 🧑‍💼 Dành cho Admin
@@ -364,3 +383,31 @@ def cancel_booking(request, booking_id):
     booking.status = 'Hủy'
     booking.save()
     return redirect('profile')
+@login_required
+@csrf_exempt
+def pay_cash(request):
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        try:
+            booking = Booking.objects.get(id=booking_id, user=request.user)
+            booking.status = "Đã thanh toán"
+            booking.save()
+            return JsonResponse({"success": True})
+        except Booking.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Không tìm thấy đơn đặt tour."})
+    return JsonResponse({"success": False, "error": "Yêu cầu không hợp lệ."})
+
+
+@login_required
+@csrf_exempt
+def cancel_booking_ajax(request):
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        try:
+            booking = Booking.objects.get(id=booking_id, user=request.user)
+            booking.status = "Hủy"
+            booking.save()
+            return JsonResponse({"success": True})
+        except Booking.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Không tìm thấy đơn đặt tour."})
+    return JsonResponse({"success": False, "error": "Yêu cầu không hợp lệ."})

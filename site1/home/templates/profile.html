@@ -1,166 +1,245 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Hồ sơ cá nhân{% endblock %}
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/profile.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="text-center mb-4">Hồ sơ cá nhân</h2>
-  <p><strong>Tên:</strong> {{ request.user.username }}</p>
-  <p><strong>Email:</strong> {{ request.user.email }}</p>
+<div class="container py-5">
+  <h2 class="text-center mb-4 fw-bold">👤 Hồ sơ cá nhân</h2>
 
-  <div class="stats d-flex justify-content-around my-4">
-    <div class="bg-primary text-white p-3 rounded text-center flex-fill mx-1">
-      <h4>Đã tham gia</h4>
-      <p>{{ completed_bookings }}</p>
-    </div>
-    <div class="bg-danger text-white p-3 rounded text-center flex-fill mx-1">
-      <h4>Đã hủy</h4>
-      <p>{{ cancelled_bookings }}</p>
-    </div>
-    <div class="bg-success text-white p-3 rounded text-center flex-fill mx-1">
-      <h4>Tổng đơn</h4>
-      <p>{{ total_bookings }}</p>
+  <!-- 🔸 Thông tin người dùng -->
+  <div class="card shadow-sm border-0 rounded-3 mb-4">
+    <div class="card-body">
+      <p><strong>Tên đăng nhập:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
     </div>
   </div>
 
-  <hr>
-  <h4>Lịch sử đặt tour</h4>
+  <hr class="my-4">
+
+  <h4 class="fw-semibold mb-3">🧳 Lịch sử đặt tour</h4>
+
   {% if bookings %}
-  <table class="table table-bordered mt-3 text-center align-middle">
-    <thead class="table-dark">
-      <tr>
-        <th>Mã đơn</th>
-        <th>Tour</th>
-        <th>Ngày đặt</th>
-        <th>Số lượng</th>
-        <th>Tổng tiền</th>
-        <th>Trạng thái</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for b in bookings %}
-    <tr data-booking-id="{{ b.id }}">
-      <td>{{ b.id }}</td>
-      <td>{{ b.tour.title }}</td>
-      <td>{{ b.booking_date|date:"d/m/Y" }}</td>
-      <td>
-        <input type="number" class="form-control pax-input" 
-               value="{{ b.pax }}" min="1" 
-               style="width:80px; margin:auto;">
-      </td>
-      <td class="total-price">{{ b.total_price|floatformat:0 }} ₫</td>
-      <td>
-        {% if b.status == "Pending" %}
-          <button class="btn btn-sm btn-warning approve-btn">Đang duyệt</button>
-          <button class="btn btn-sm btn-danger cancel-btn">Hủy</button>
-        {% elif b.status == "Duyệt" %}
-          <span class="badge bg-success">Đã duyệt</span>
-        {% elif b.status == "Hủy" %}
-          <span class="badge bg-danger">Đã hủy</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover text-center align-middle shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th>Mã đơn</th>
+          <th>Tour</th>
+          <th>Ngày đặt</th>
+          <th>Số lượng</th>
+          <th>Tổng tiền (VNĐ)</th>
+          <th>Trạng thái</th>
+          <th style="width: 180px;">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr data-booking-id="{{ b.id }}">
+          <td>{{ b.id }}</td>
+          <td class="text-start ps-3">{{ b.tour.title }}</td>
+          <td>{{ b.booking_date|date:"d/m/Y" }}</td>
+          <td>{{ b.pax }}</td>
+          <td class="fw-bold text-primary">{{ b.total_price|floatformat:0 }}</td>
+          <td>
+            {% if b.status == "Pending" %}
+              <span class="badge bg-warning text-dark">Đang duyệt</span>
+            {% elif b.status == "Duyệt" %}
+              <span class="badge bg-success">Đã duyệt</span>
+            {% elif b.status == "Đã thanh toán" %}
+              <span class="badge bg-info text-dark">Đã thanh toán</span>
+            {% elif b.status == "Hủy" %}
+              <span class="badge bg-danger">Đã hủy</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="d-flex flex-wrap justify-content-center gap-1">
+              {% if b.status == "Pending" %}
+                <button class="btn btn-outline-danger btn-sm cancel-booking-btn">
+                  <i class="bi bi-x-circle"></i> Hủy
+                </button>
+              {% elif b.status == "Duyệt" %}
+                <a href="{% url 'payment_qr' b.id %}?amount={{ b.total_price }}" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-qr-code"></i> QR
+                </a>
+                <button class="btn btn-outline-success btn-sm pay-cash-btn">
+                  <i class="bi bi-cash-coin"></i> Tiền mặt
+                </button>
+              {% elif b.status == "Đã thanh toán" %}
+                <button class="btn btn-outline-warning btn-sm rate-btn">
+                  <i class="bi bi-star"></i> Đánh giá
+                </button>
+              {% else %}
+                <small class="text-muted">-</small>
+              {% endif %}
+              <button class="btn btn-outline-info btn-sm detail-btn">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🧾 Nút xuất PDF (chỉ hiện 1 lần) -->
+  <div class="text-end mt-3">
+    <button id="export-pdf" class="btn btn-danger">
+      <i class="bi bi-file-earmark-pdf"></i> Xuất PDF
+    </button>
+  </div>
+
   {% else %}
-    <p>Bạn chưa có đơn đặt tour nào.</p>
+  <div class="alert alert-info text-center mt-3">
+    Bạn chưa có đơn đặt tour nào.
+  </div>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-// ✅ Lấy token CSRF tự động (an toàn hơn)
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-const csrftoken = getCookie('csrftoken');
-$.ajaxSetup({
-    headers: { 'X-CSRFToken': csrftoken }
-});
+$(function() {
 
-$(document).ready(function(){
-
-    // ✅ Cập nhật số lượng người
-    $('.pax-input').on('change', function(){
-        var row = $(this).closest('tr');
-        var booking_id = row.data('booking-id');
-        var pax = $(this).val();
-
-        $.ajax({
-            url: "{% url 'update_pax' %}",
-            type: "POST",
-            data: { 'booking_id': booking_id, 'pax': pax },
-            success: function(response){
-                if(response.success){
-                    row.find('.total-price').text(response.total_price);
-                } else {
-                    alert(response.error || 'Lỗi cập nhật số lượng!');
-                }
-            },
-            error: function(){
-                alert('Có lỗi xảy ra, vui lòng thử lại!');
-            }
-        });
+  // 💰 Thanh toán tiền mặt
+  $(".pay-cash-btn").click(function() {
+    const bookingId = $(this).closest("tr").data("booking-id");
+    Swal.fire({
+      title: "Xác nhận thanh toán?",
+      text: "Bạn có chắc muốn thanh toán tiền mặt cho tour này?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#198754",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.post("{% url 'pay_cash' %}", {
+          booking_id: bookingId,
+          csrfmiddlewaretoken: "{{ csrf_token }}"
+        })
+        .done(res => {
+          if (res.success) {
+            Swal.fire("Thành công!", "Thanh toán thành công ✅", "success").then(() => location.reload());
+          } else {
+            Swal.fire("Lỗi!", res.error, "error");
+          }
+        })
+        .fail(() => Swal.fire("Lỗi hệ thống!", "Vui lòng thử lại sau!", "error"));
+      }
     });
-
-    // ✅ Duyệt tour
-    $('.approve-btn').on('click', function(){
-        var row = $(this).closest('tr');
-        var booking_id = row.data('booking-id');
-        $.ajax({
-            url: "{% url 'approve_booking_ajax' %}",
-            type: "POST",
-            data: { 'booking_id': booking_id },
-            success: function(response){
-                if(response.success){
-                    row.find('td:last').html('<span class="badge bg-success">Đã duyệt</span>');
-                }
-            }
-        });
-    });
-
-    $(document).ready(function(){
-    $('.cancel-btn').on('click', function(){
-        var row = $(this).closest('tr');
-        var booking_id = row.data('booking-id');
-        if(confirm('Bạn có chắc muốn hủy đơn này không?')){
-            $.ajax({
-                url: "{% url 'cancel_booking_ajax' %}",
-                type: "POST",
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                data: { 'booking_id': booking_id },
-                success: function(response){
-                    console.log(response); // kiểm tra log
-                    if(response.success){
-                        row.fadeOut(300, function(){ $(this).remove(); });
-                    } else {
-                        alert("❌ " + (response.error || "Không thể hủy!"));
-                    }
-                },
-                error: function(xhr){
-                    alert("🚨 Lỗi server: " + xhr.status + " " + xhr.statusText);
-                }
-            });
-        }
-    });
-});
-      
-
   });
-  </script>
+// 💵 Định dạng lại cột "Tổng tiền (VNĐ)" cho dễ đọc
+$(".table tbody tr").each(function() {
+  const moneyCell = $(this).find("td:eq(4)"); // Cột thứ 5 là Tổng tiền
+  const rawValue = moneyCell.text().trim();
+
+  if (!isNaN(rawValue) && rawValue !== "") {
+    const formatted = Number(rawValue).toLocaleString("vi-VN"); // Thêm dấu phẩy
+    moneyCell.text(`${formatted} VNĐ`);
+  }
+});
+  // ❌ Hủy tour
+  $(".cancel-booking-btn").click(function() {
+    const bookingId = $(this).closest("tr").data("booking-id");
+    Swal.fire({
+      title: "Bạn có chắc chắn muốn hủy tour?",
+      text: "Hành động này không thể hoàn tác!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Hủy tour",
+      cancelButtonText: "Quay lại"
+    }).then(result => {
+      if (result.isConfirmed) {
+        $.post("{% url 'cancel_booking_ajax' %}", {
+          booking_id: bookingId,
+          csrfmiddlewaretoken: "{{ csrf_token }}"
+        })
+        .done(res => {
+          if (res.success) {
+            Swal.fire("Đã hủy!", "Tour của bạn đã được hủy.", "success").then(() => location.reload());
+          } else {
+            Swal.fire("Lỗi!", res.error, "error");
+          }
+        });
+      }
+    });
+  });
+
+  // 👁 Chi tiết tour
+  $(".detail-btn").click(function() {
+    const tr = $(this).closest("tr");
+    Swal.fire({
+      title: "Chi tiết tour",
+      html: `
+        <div class="text-start">
+          <p><b>Tên tour:</b> ${tr.find("td:eq(1)").text()}</p>
+          <p><b>Ngày đặt:</b> ${tr.find("td:eq(2)").text()}</p>
+          <p><b>Tổng tiền:</b> ${tr.find("td:eq(4)").text()}</p>
+          <p><b>Trạng thái:</b> ${tr.find("td:eq(5)").text()}</p>
+        </div>
+      `,
+      icon: "info",
+      confirmButtonText: "Đóng"
+    });
+  });
+
+  // 🌟 Đánh giá tour
+  $(".rate-btn").click(function() {
+    Swal.fire({
+      title: "Đánh giá tour 🌟",
+      html: `
+        <div id="rating-stars" style="font-size:24px; color:#FFD700; cursor:pointer;">★★★★★</div>
+        <textarea id="comment" class="form-control mt-3" placeholder="Nhập nhận xét của bạn..."></textarea>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Gửi",
+      cancelButtonText: "Hủy",
+      didOpen: () => {
+        const stars = $("#rating-stars");
+        let rating = 5;
+        stars.on("mousemove click", function(e) {
+          const x = e.pageX - stars.offset().left;
+          rating = Math.ceil(x / (stars.width() / 5));
+          stars.text("★★★★★".slice(0, rating) + "☆☆☆☆☆".slice(rating));
+        });
+      },
+    }).then(result => {
+      if (result.isConfirmed) {
+        Swal.fire("Cảm ơn!", "Đánh giá của bạn đã được gửi 🎉", "success");
+      }
+    });
+  });
+
+  // 🧾 Xuất PDF (chỉ 1 lần)
+  $("#export-pdf").click(function() {
+    Swal.fire({
+      icon: "success",
+      title: "Đang tạo file PDF...",
+      text: "Vui lòng chờ trong giây lát ⏳",
+      timer: 2000,
+      showConfirmButton: false
+    });
+  });
+});
+window.addEventListener("scroll", function() {
+  const navbar = document.querySelector(".custom-navbar");
+  if (window.scrollY > 50) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+</script>
 {% endblock %}

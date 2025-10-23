@@ -1,0 +1,179 @@
+/* ====== Tổng thể ====== */
+body {
+  background-color: #f8f9fa;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: #222;
+}
+
+.container {
+  max-width: 1100px;
+  padding-top: 60px !important;
+}
+
+/* ====== Tiêu đề ====== */
+h2 {
+  font-size: 2rem;
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* ====== Thẻ card ====== */
+.card {
+  border-radius: 15px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== Bảng ====== */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.table thead {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.table td,
+.table th {
+  vertical-align: middle !important;
+  padding: 12px 10px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #eef3ff;
+}
+
+/* ====== Cột thao tác ====== */
+.table td:last-child {
+  text-align: center;
+  width: 180px;
+}
+
+.table td:last-child .btn-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.table td:last-child .btn {
+  border-radius: 6px;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+}
+
+/* ====== Số tiền ====== */
+.table td:nth-child(5) {
+  text-align: right;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.table td:nth-child(5)::after {
+  content: " VNĐ";
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Không có dấu ngăn cách */
+.table td:nth-child(5) {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+
+/* ====== Badge trạng thái ====== */
+.badge {
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.badge-success {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.badge-warning {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.badge-danger {
+  background: #f8d7da;
+  color: #842029;
+}
+
+/* ====== Nút bấm ====== */
+.btn {
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  font-weight: 500;
+}
+
+.btn-sm {
+  padding: 5px 8px;
+  font-size: 0.85rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+#export-pdf {
+  border-radius: 10px;
+}
+
+/* ====== Thông báo ====== */
+.alert-info {
+  background-color: #e9f5ff;
+  border: 1px solid #b6e0ff;
+  color: #055160;
+  border-radius: 12px;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border: none;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #333;
+  }
+
+  .table td:last-child {
+    justify-content: center;
+  }
+}
+.table td:nth-child(5)::after {
+  content: "";
+}

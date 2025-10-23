@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from django.utils.text import slugify
 from django.db import models
 from django.contrib.auth.models import User
 class Destination(models.Model):
@@ -69,6 +69,7 @@ class Tour(models.Model):
         return 0
 
 
+
 # ⭐ Đánh giá tour
 class Review(models.Model):
     tour = models.ForeignKey(
@@ -95,6 +96,7 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.user.username} – {self.tour.title} ({self.rating}⭐)"
 
+# 📋 Đơn đặt tour
 class Booking(models.Model):
     tour = models.ForeignKey('Tour', on_delete=models.CASCADE, related_name='bookings')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -116,13 +118,18 @@ class Booking(models.Model):
         return 0
 
 class News(models.Model):
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    summary = models.TextField(blank=True)
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, blank=True)
+    summary = models.TextField()
     content = models.TextField()
-    image = models.ImageField(upload_to='news/', null=True, blank=True)
-    published_at = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='news/', blank=True, null=True)
+    published_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
