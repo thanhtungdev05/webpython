@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Đăng nhập - Travel & Tourism{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+<section class="login-section">
+  <div class="login-container">
+    <div class="login-box glass-card">
+      <h2 class="text-center mb-4">Đăng nhập</h2>
+
+      <form method="POST" class="login-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-login">Đăng nhập</button>
+      </form>
+
+      <p class="text-small text-center mt-3">
+        Chưa có tài khoản?
+        <a href="{% url 'register' %}" class="link-register">Đăng ký ngay</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

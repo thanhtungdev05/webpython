@@ -1,0 +1,245 @@
+
+/* 🌴 HOME PAGE STYLE - Clean Modern Look */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --light-bg: #f8f9fa;
+  --text-dark: #212529;
+  --radius: 1rem;
+  --shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* === HERO SECTION === */
+.hero-section {
+  position: relative;
+  width: 100%;
+  margin-bottom: 5rem; /* tách rõ với thanh tìm kiếm */
+}
+
+.hero-img {
+  height: 90vh;
+  width: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+  transition: transform 2s ease, filter 1.5s ease;
+}
+
+.carousel-item.active .hero-img {
+  transform: scale(1.05);
+  filter: brightness(80%);
+}
+
+.carousel-inner {
+  border-radius: 1.2rem;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.hero-caption {
+  bottom: 25%;
+  left: 10%;
+  text-align: left;
+}
+
+.hero-caption-inner {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  display: inline-block;
+  animation: fadeUp 1.2s ease-out;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+.hero-sub {
+  font-size: 1.2rem;
+  color: #eee;
+  margin-bottom: 1.2rem;
+}
+
+.hero-ctas .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.hero-ctas .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Indicators & Controls */
+.carousel-indicators button {
+  background-color: #fff !important;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1);
+}
+
+/* === SEARCH BAR === */
+.search-section {
+  margin-top: -2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 10;
+}
+
+.search-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  box-shadow: var(--shadow);
+  max-width: 950px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.search-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.input-group-text {
+  background-color: var(--light-bg);
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.form-control {
+  border: none;
+  box-shadow: none !important;
+  font-size: 0.95rem;
+  padding: 0.7rem 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+  background: #f9fafb;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  border: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* === TOUR CARD === */
+.card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  height: 240px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.card-meta {
+  color: var(--secondary-color);
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+/* === CONTACT CTA === */
+.contact-cta {
+  background: linear-gradient(135deg, var(--primary-color), #00a3ff);
+  color: #fff;
+}
+
+.contact-cta-card {
+  background: #fff;
+  color: var(--text-dark);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.contact-cta h3 {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.contact-cta .btn-outline-secondary {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.contact-cta .btn-outline-secondary:hover {
+  background: var(--secondary-color);
+  color: #fff;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .hero-img {
+    height: 60vh;
+  }
+
+  .hero-caption-inner {
+    padding: 1rem 1.2rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .search-card {
+    padding: 1.2rem;
+    margin-top: 1rem;
+  }
+}

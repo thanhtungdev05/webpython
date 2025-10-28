@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Đơn đặt tour của bạn</h3>
+{% if bookings %}
+  <table class="table">
+    <thead><tr><th>ID</th><th>Tour</th><th>Ngày</th><th>Số người</th><th>Trạng thái</th></tr></thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.id }}</td>
+        <td>{{ b.tour.title }}</td>
+        <td>{{ b.booking_date }}</td>
+        <td>{{ b.pax }}</td>
+        <td>{{ b.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Bạn cần đăng nhập để xem lịch sử đặt tour hoặc hiện chưa có đơn nào.</p>
+{% endif %}
+{% endblock %}

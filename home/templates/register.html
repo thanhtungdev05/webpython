@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Đăng ký tài khoản - Travel & Tourism{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+<section class="register-section">
+  <div class="register-wrapper">
+    <div class="register-card">
+      <div class="register-header text-center">
+        <i class="bi bi-person-plus-fill icon"></i>
+        <h2>Đăng ký tài khoản</h2>
+        <p>Tham gia để khám phá thế giới cùng Travel & Tourism 🌍</p>
+      </div>
+
+      <form method="POST" class="register-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-register w-100 mt-3">
+          <i class="bi bi-send-fill"></i> Đăng ký ngay
+        </button>
+      </form>
+
+      <p class="login-text text-center mt-3">
+        Đã có tài khoản?
+        <a href="{% url 'login' %}" class="login-link">Đăng nhập</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

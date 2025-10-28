@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+  <h3>Đặt tour</h3>
+
+  {% if tour %}
+  <form method="POST" class="mb-4">
+    {% csrf_token %}
+    <input type="hidden" name="tour_id" value="{{ tour.id }}">
+    <div class="mb-3">
+      <label>Tour</label>
+      <input type="text" class="form-control" value="{{ tour.title }}" readonly>
+    </div>
+    <div class="mb-3">
+      <label>Họ và tên</label>
+      <input type="text" name="full_name" class="form-control" value="{{ request.user.get_full_name }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" name="email" class="form-control" value="{{ request.user.email }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Điện thoại</label>
+      <input type="text" name="phone" class="form-control" value="{{ request.user.phone }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Số lượng người</label>
+      <input type="number" name="pax" min="1" class="form-control" value="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Xác nhận đặt tour</button>
+  </form>
+  {% endif %}
+
+  <hr>
+
+  <h3>Đơn đặt tour của bạn</h3>
+  {% if bookings %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tour</th>
+          <th>Ngày</th>
+          <th>Số người</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td>{{ b.tour.title }}</td>
+          <td>{{ b.booking_date|date:"d/m/Y" }}</td>
+          <td>{{ b.pax }}</td>
+          <td>{{ b.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Hiện bạn chưa có đơn đặt tour nào.</p>
+  {% endif %}
+</div>
+{% endblock %}

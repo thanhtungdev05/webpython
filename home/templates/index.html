@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Travel & Tourism{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+
+
+<!-- HERO CAROUSEL -->
+<section class="hero-section">
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    
+    <!-- Nút chọn slide -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+    </div>
+
+    <!-- Nội dung các slide -->
+    <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
+      <div class="carousel-item active">
+        <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=1600" class="d-block w-100 hero-img" alt="Biển xanh">
+        <div class="carousel-caption hero-caption">
+          <div class="hero-caption-inner">
+            <h1 class="hero-title">Khám phá bãi biển tuyệt đẹp 🌴</h1>
+            <p class="hero-sub">Hòa mình vào làn nước trong xanh và ánh nắng vàng rực rỡ.</p>
+            <div class="hero-ctas">
+              <a href="{% url 'tour_list' %}" class="btn btn-lg btn-primary me-2">Khám phá</a>
+              <a href="{% url 'contact' %}" class="btn btn-lg btn-outline-light">Liên hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="https://img.freepik.com/premium-photo/layers-mountains-philippines_1121250-23924.jpg" class="d-block w-100 hero-img" alt="Núi non">
+        <div class="carousel-caption hero-caption">
+          <div class="hero-caption-inner">
+            <h1 class="hero-title">Chinh phục núi rừng hùng vĩ ⛰️</h1>
+            <p class="hero-sub">Khám phá những cung đường tuyệt đẹp và thử thách bản thân.</p>
+            <div class="hero-ctas">
+              <a href="{% url 'tour_list' %}" class="btn btn-lg btn-primary me-2">Khám phá</a>
+              <a href="{% url 'contact' %}" class="btn btn-lg btn-outline-light">Liên hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="https://th.bing.com/th/id/R.954a89aa71d0868db71182a9ce519bd8?rik=4zflhpNqP7BcPQ&riu=http%3a%2f%2fmsa4.files.wordpress.com%2f2008%2f08%2fnyc-night1.jpg&ehk=NsG0EzrMrBbM8zkAk8tSyARcfGFtGxuW3wqdFA%2fmI54%3d&risl=&pid=ImgRaw&r=0" class="d-block w-100 hero-img" alt="Thành phố">
+        <div class="carousel-caption hero-caption">
+          <div class="hero-caption-inner">
+            <h1 class="hero-title">Trải nghiệm thành phố sôi động 🌆</h1>
+            <p class="hero-sub">Hòa mình vào nhịp sống hiện đại và văn hóa đa dạng.</p>
+            <div class="hero-ctas">
+              <a href="{% url 'tour_list' %}" class="btn btn-lg btn-primary me-2">Khám phá</a>
+              <a href="{% url 'contact' %}" class="btn btn-lg btn-outline-light">Liên hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="https://st.quantrimang.com/photos/image/2016/10/03/sa-mac.jpg" class="d-block w-100 hero-img" alt="Sa mạc">
+        <div class="carousel-caption hero-caption">
+          <div class="hero-caption-inner">
+            <h1 class="hero-title">Khám phá sa mạc huyền bí 🏜️</h1>
+            <p class="hero-sub">Một hành trình giữa cát vàng và bầu trời xanh vô tận.</p>
+            <div class="hero-ctas">
+              <a href="{% url 'tour_list' %}" class="btn btn-lg btn-primary me-2">Khám phá</a>
+              <a href="{% url 'contact' %}" class="btn btn-lg btn-outline-light">Liên hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút điều hướng trái/phải -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<!-- SEARCH (2 hàng - S2 rút gọn) -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-card mx-auto shadow-lg">
+      <form method="GET" action="{% url 'tour_list' %}" class="row g-3 align-items-center">
+
+        <!-- Row 1 -->
+        <div class="col-lg-6">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+            <input type="text" class="form-control" id="destination" name="destination" placeholder="Điểm đến, ví dụ: Nha Trang" autocomplete="off">
+          </div>
+          <ul id="destination-suggestions" class="suggestions"></ul>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+            <input type="date" class="form-control" id="date" name="date">
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+<div class="col-lg-6">
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+    <input type="text" class="form-control" id="duration" name="duration" placeholder="Thời lượng (ví dụ: 3 ngày 2 đêm)">
+  </div>
+</div>
+
+        <div class="col-lg-4 d-grid">
+          <button type="submit" class="btn btn-primary btn-lg">🔍 Tìm kiếm</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 🌴 TOUR NỔI BẬT (KEEP AS-IS) -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary">Tour nổi bật</h2>
+      <p class="text-muted">Những hành trình được yêu thích nhất</p>
+    </div>
+
+    {% if tours %}
+      <div class="row g-4">
+        {% for tour in tours %}
+        <div class="col-md-4">
+  <div class="card border-0 shadow-sm h-100 tour-card" data-price="{{ tour.price|default_if_none:0 }}">
+    <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}">
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title fw-semibold">{{ tour.title }}</h5>
+      <p class="card-meta text-secondary small mb-2">
+        {{ tour.destination.name }} • {{ tour.duration }}
+      </p>
+      <p class="card-text text-muted flex-grow-1">
+        {{ tour.description|default:tour.schedule|truncatewords:25 }}
+      </p>
+      <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline-primary w-100 mt-2">Xem chi tiết</a>
+    </div>
+  </div>
+</div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <img src="{% static 'images/empty-tour.svg' %}" width="150" class="mb-3 opacity-75">
+        <h5 class="fw-bold text-muted">Hiện chưa có tour nào nổi bật</h5>
+        <a href="{% url 'tour_list' %}" class="btn btn-primary mt-3">Xem tất cả tour</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+
+
+    <!-- dots -->
+    <div class="d-flex justify-content-center mt-3">
+      <div id="testiDots" class="testi-dots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 📞 CONTACT CTA -->
+<section class="contact-cta py-5">
+  <div class="container">
+    <div class="contact-cta-card p-4 rounded-4 shadow-lg d-flex flex-column flex-md-row align-items-center justify-content-between">
+      <div>
+        <h3 class="mb-1">Bạn cần tư vấn cho chuyến đi?</h3>
+        <p class="mb-0 text-muted">Gọi cho chúng tôi hoặc gửi yêu cầu — chúng tôi sẽ thiết kế hành trình phù hợp.</p>
+      </div>
+      <div class="mt-3 mt-md-0">
+        <a href="{% url 'contact' %}" class="btn btn-lg btn-primary me-3">Liên hệ ngay</a>
+        <a href="tel:+84000000000" class="btn btn-outline-secondary btn-lg">Gọi: 1900 0000</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPTS -->
+<script src="{% static 'js/autocomplete.js' %}"></script>
+<script>
+  // Testimonial slider (vanilla JS)
+  (function(){
+    const slider = document.getElementById('testimonialSlider');
+    const items = Array.from(slider.querySelectorAll('.testi-item'));
+    const dotsContainer = document.getElementById('testiDots');
+    const prevBtn = document.getElementById('testiPrev');
+    const nextBtn = document.getElementById('testiNext');
+    let current = 0;
+    let interval = null;
+    const delay = 4500;
+
+    function buildDots(){
+      items.forEach((_, idx) => {
+        const d = document.createElement('button');
+        d.className = 'testi-dot';
+        d.setAttribute('aria-label','Slide '+(idx+1));
+        d.addEventListener('click', ()=> goTo(idx));
+        dotsContainer.appendChild(d);
+      });
+    }
+
+    function update(){
+      items.forEach((it, i) => {
+        it.style.transform = `translateX(${(i - current) * 100}%)`;
+        it.style.opacity = (i === current) ? '1' : '0.45';
+        it.style.pointerEvents = (i === current) ? 'auto' : 'none';
+      });
+      // update dots
+      Array.from(dotsContainer.children).forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function goTo(i){
+      current = (i + items.length) % items.length;
+      update();
+      resetInterval();
+    }
+
+    function next(){
+      goTo(current + 1);
+    }
+
+    function prev(){
+      goTo(current - 1);
+    }
+
+    function startInterval(){
+      interval = setInterval(next, delay);
+    }
+
+    function resetInterval(){
+      if(interval) clearInterval(interval);
+      startInterval();
+    }
+
+    // init
+    items.forEach((it, i) => {
+      it.style.position = 'absolute';
+      it.style.top = 0;
+      it.style.left = 0;
+      it.style.width = '100%';
+      it.style.transition = 'transform 600ms cubic-bezier(.2,.8,.2,1), opacity 300ms';
+      it.style.transform = `translateX(${i * 100}%)`;
+    });
+
+    buildDots();
+    update();
+    startInterval();
+
+    // controls
+    if(prevBtn) prevBtn.addEventListener('click', ()=>{ prev(); });
+    if(nextBtn) nextBtn.addEventListener('click', ()=>{ next(); });
+
+    // pause on hover
+    const container = document.querySelector('.testimonial-slider');
+    container.addEventListener('mouseenter', ()=> { if(interval) clearInterval(interval); });
+    container.addEventListener('mouseleave', ()=> { resetInterval(); });
+
+    // responsive fallback: if items <=1 hide controls & dots
+    if(items.length <= 1){
+      dotsContainer.style.display = 'none';
+      if(prevBtn) prevBtn.style.display = 'none';
+      if(nextBtn) nextBtn.style.display = 'none';
+    }
+  })();
+document.addEventListener('DOMContentLoaded', function() {
+  const minInput = document.getElementById('min_price');
+  const maxInput = document.getElementById('max_price');
+  const searchForm = document.querySelector('.search-card form');
+  const tourCards = document.querySelectorAll('.tour-card');
+
+  searchForm.addEventListener('submit', function(e){
+    e.preventDefault(); // Ngăn submit
+    const min = parseFloat(minInput.value) || 0;
+    const max = parseFloat(maxInput.value) || Infinity;
+
+    tourCards.forEach(card => {
+      const price = parseFloat(card.dataset.price);
+      if(!isNaN(price) && price >= min && price <= max){
+        card.style.display = ''; // Hiển thị bình thường
+      } else {
+        card.style.display = 'none'; // Ẩn tour
+      }
+    });
+  });
+});
+</script>
+
+{% endblock %}
