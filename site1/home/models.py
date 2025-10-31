@@ -107,7 +107,10 @@ class Booking(models.Model):
     booking_date = models.DateField(default=timezone.now)
     status = models.CharField(max_length=50, default='Pending')  # Pending, Confirmed, Cancelled
     created_at = models.DateTimeField(auto_now_add=True)
-
+     # Thông tin khách hàng bổ sung
+    address = models.CharField(max_length=255, blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    cccd = models.CharField(max_length=20, blank=True, null=True)
     def __str__(self):
         return f"Booking {self.id} - {self.full_name}"
 

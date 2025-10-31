@@ -14,6 +14,13 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django import template
 from django.views.decorators.csrf import csrf_exempt
+import json
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from datetime import datetime
 # --- Trang chủ ---
 def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
@@ -207,11 +214,11 @@ def user_logout(request):
 def tour_list(request):
     tours = Tour.objects.all()
 
+    # Lấy dữ liệu từ form
     query = request.GET.get('q') or request.GET.get('destination') or request.GET.get('city')
     destination = request.GET.get('destination')
     city = request.GET.get('city')
-    price_min = request.GET.get('price_min')
-    price_max = request.GET.get('price_max')
+    duration = request.GET.get('duration')  # 👈 thêm dòng này
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
@@ -222,30 +229,26 @@ def tour_list(request):
         tours = tours.filter(destination__name__icontains=query)
     if city:
         tours = tours.filter(city__icontains=city)
-    if price_min:
-        tours = tours.filter(price__gte=price_min)
-    if price_max:
-        tours = tours.filter(price__lte=price_max)
+    if duration:
+        tours = tours.filter(duration__icontains=duration)  # 👈 lọc theo thời lượng
     if start_date:
         tours = tours.filter(start_date__gte=start_date)
     if end_date:
         tours = tours.filter(end_date__lte=end_date)
 
-    # Format lại price để hiển thị đẹp trong template
-        # Format giá
+    # Format giá để hiển thị đẹp trong template
     for tour in tours:
         if tour.price is not None:
-            # Ghi đè lại giá để template vẫn dùng {{ tour.price }}
             tour.price = f"{tour.price:,.0f}".replace(",", ".")
         else:
             tour.price = "Liên hệ"
-
 
     return render(request, 'tour-list.html', {
         'tours': tours,
         'query': query,
         'destination': destination,
-        'city': city
+        'city': city,
+        'duration': duration  # 👈 truyền thêm vào context (để hiển thị lại trong form nếu cần)
     })
 def suggest_destination(request):
     query = request.GET.get('q', '')
@@ -411,3 +414,50 @@ def cancel_booking_ajax(request):
         except Booking.DoesNotExist:
             return JsonResponse({"success": False, "error": "Không tìm thấy đơn đặt tour."})
     return JsonResponse({"success": False, "error": "Yêu cầu không hợp lệ."})
+@csrf_exempt
+def update_booking_status(request, pk):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        status = data.get("status")  # "Đã thanh toán"
+        booking = Booking.objects.get(pk=pk)
+        booking.status = status
+        booking.save()
+
+        # URL profile
+        profile_url = request.build_absolute_uri(reverse('profile'))
+
+        # Render email HTML
+        html_content = render_to_string('emails/payment_confirmation.html', {
+            'user': booking.user,
+            'booking': booking,
+            'profile_url': profile_url,
+            'year': datetime.now().year
+        })
+        text_content = strip_tags(html_content)
+
+        # Gửi email
+        email = EmailMessage(
+            subject=f"Xác nhận thanh toán Tour #{booking.id}",
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[booking.user.email]
+        )
+        email.content_subtype = "html"
+        email.send(fail_silently=False)
+
+        return JsonResponse({"success": True, "status": booking.status})
+    return JsonResponse({"success": False})
+@csrf_exempt
+def update_customer_info(request, pk):
+    if request.method == "POST":
+        booking = Booking.objects.get(pk=pk)
+        data = json.loads(request.body)
+        booking.full_name = data.get("full_name")
+        booking.phone = data.get("phone")
+        booking.email = data.get("email")
+        booking.address = data.get("address")
+        booking.birth_date = data.get("birth_date")
+        booking.cccd = data.get("cccd")
+        booking.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False})

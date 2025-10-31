@@ -11,6 +11,11 @@ from .models import Tour, News  # đổi lại đúng tên model của bạn
 from .forms import UserRegisterForm, UserLoginForm
 from django.http import JsonResponse
 from django.db.models import Q
+from django.shortcuts import render
+from django.db.models import Q, F, Value
+from django.db.models.functions import Abs
+from django.db.models import Q, F, FloatField
+from django.db.models.functions import Replace, Cast
 # --- Trang chủ ---
 def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
@@ -23,7 +28,6 @@ def home(request):
 
 
 def tour_list(request):
-    # Lấy dữ liệu từ form GET
     q = request.GET.get('q', '').strip()
     destination = request.GET.get('destination', '').strip()
     city = request.GET.get('city', '').strip()
@@ -32,7 +36,6 @@ def tour_list(request):
 
     tours = Tour.objects.all()
 
-    # --- Lọc theo ô tìm kiếm ---
     if q:
         tours = tours.filter(
             Q(title__icontains=q) |
@@ -40,20 +43,21 @@ def tour_list(request):
             Q(destination__location__icontains=q)
         )
 
-    # --- Lọc riêng theo trường ---
     if destination:
         tours = tours.filter(destination__name__icontains=destination)
     if city:
         tours = tours.filter(destination__location__icontains=city)
-    if min_price:
-        tours = tours.filter(price__gte=min_price)
-    if max_price:
-        tours = tours.filter(price__lte=max_price)
 
-    # --- Nếu không có kết quả, gợi ý 3 tour rẻ nhất ---
-    similar_tours = None
-    if not tours.exists():
-        similar_tours = Tour.objects.order_by('price')[:3]
+    # Chuyển min/max price sang float nếu có
+    try:
+        if min_price:
+            min_price_val = float(min_price.replace(',', '').strip())
+            tours = tours.filter(price__gte=min_price_val)
+        if max_price:
+            max_price_val = float(max_price.replace(',', '').strip())
+            tours = tours.filter(price__lte=max_price_val)
+    except ValueError:
+        pass
 
     return render(request, 'tour_list.html', {
         'tours': tours,
@@ -61,8 +65,7 @@ def tour_list(request):
         'destination': destination,
         'city': city,
         'min_price': min_price,
-        'max_price': max_price,
-        'similar_tours': similar_tours
+        'max_price': max_price
     })
 
 # --- API gợi ý địa điểm khi gõ từ khóa ---

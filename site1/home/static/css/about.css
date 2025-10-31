@@ -57,7 +57,7 @@ body {
 }
 
 .btn-view {
-  background: #007bff;
+  background:  #004080;
   color: #fff;
   border: none;
   padding: 10px 30px;
@@ -66,7 +66,7 @@ body {
 }
 
 .btn-view:hover {
-  background: #0056b3;
+  background:  #004080;
 }
 
 .story-section {
@@ -124,7 +124,7 @@ body {
 .btn-view {
   display: inline-block;
   padding: 10px 24px;
-  background-color: #007bff;
+  background-color:  #004080;
   color: white;
   border-radius: 8px;
   text-decoration: none;
@@ -133,7 +133,7 @@ body {
 }
 
 .btn-view:hover {
-  background-color: #0056b3;
+  background-color:  #004080;
 }
 /* Fade-in hiệu ứng khi cuộn */
 .career-item, .story-section img, .story-text {
@@ -175,3 +175,17 @@ body {
   z-index: 9999;
 }
 .lightbox-img { max-width: 90%; max-height: 80%; border-radius: 10px; }
+.fade-in {
+  opacity: 1 !important;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}
+.mission-card {
+  background: #fff;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.btn-view {
+  color: #fff !important;
+}

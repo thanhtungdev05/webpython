@@ -1,3 +1,4 @@
+
 /* 🌴 HOME PAGE STYLE - Clean Modern Look */
 :root {
   --primary-color: #007bff;
@@ -242,29 +243,3 @@
     margin-top: 1rem;
   }
 }
-        /* Căn chỉnh lại thanh navbar để đồng nhất toàn site */
-        .custom-navbar {
-            background-color: #0b2239 !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-            padding: 10px 0;
-        }
-        .custom-navbar .navbar-brand {
-            color: #00bfff !important;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        .custom-navbar .nav-link {
-            color: #e6e6e6 !important;
-            transition: color 0.2s ease;
-        }
-        .custom-navbar .nav-link:hover,
-        .custom-navbar .nav-link.active {
-            color: #00bfff !important;
-        }
-        body {
-            background: linear-gradient(to right, #b3ecff, #e6faff);
-        }
-        footer {
-            background-color: #0b2239 !important;
-            color: #ccc;
-        }

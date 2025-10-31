@@ -1,0 +1,178 @@
+/* =============================
+   Travel & Tourism - Register Page
+   Đồng bộ với login.css
+============================= */
+
+body {
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+}
+
+.register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.register-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 40px 45px;
+  max-width: 430px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.register-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Header */
+.register-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.register-header .icon {
+  font-size: 3rem;
+  color: #0d6efd;
+  margin-bottom: 8px;
+}
+
+.register-header h2 {
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 8px;
+}
+
+.register-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Form */
+.register-form label {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.register-form input,
+.register-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: #0d6efd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+/* Button */
+.btn-register {
+  width: 100%;
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+/* Text liên kết */
+.login-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 20px;
+}
+
+.login-link {
+  color: #0d6efd;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .register-card {
+    padding: 30px 25px;
+  }
+
+  .register-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* =============================
+   Gợi ý / yêu cầu mật khẩu
+   (mờ, tinh tế giống login.css)
+============================= */
+.helptext,
+.helptext ul,
+.helptext li {
+  color: rgba(0, 0, 0, 0.5); /* Màu xám nhạt, mờ */
+  font-size: 0.8rem; /* Nhỏ hơn chữ form */
+  line-height: 1.4;
+  margin-top: 4px;
+  margin-bottom: 0;
+  list-style: disc;
+  padding-left: 20px;
+}
+
+/* Làm mờ thêm các yêu cầu mật khẩu chi tiết */
+.register-form ul.helptext,
+.register-form ul.helptext li {
+  color: rgba(0, 0, 0, 0.45); /* Mờ hơn nữa */
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-left: 15px;
+  list-style: disc;
+  font-style: italic;
+}
+
+/* Đảm bảo canh chỉnh đẹp */
+.register-form ul.helptext {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding-left: 18px;
+}

@@ -40,7 +40,8 @@ urlpatterns = [
     # 💵 Thanh toán
     path('pay_cash/', views.pay_cash, name='pay_cash'),
     path('payment/qr/<int:booking_id>/', views.payment_qr, name='payment_qr'),
-
+    path('booking/<int:pk>/update-status/', views.update_booking_status, name='update_booking_status'),
+    path('booking/<int:pk>/update-customer-info/', views.update_customer_info, name='update_customer_info'),
     # 📞 Giới thiệu & liên hệ
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),

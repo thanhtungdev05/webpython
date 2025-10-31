@@ -135,3 +135,10 @@ LOGOUT_REDIRECT_URL = 'login'
 # ============================================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'tungdt5101@ut.edu.vn'       # Gmail của bạn
+EMAIL_HOST_PASSWORD = '30102005'     # App Password (xem bước 2)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

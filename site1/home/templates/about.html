@@ -1,9 +1,196 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Giới thiệu - Travel & Tourism{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}?v=3">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-    <h1>Giới thiệu về chúng tôi</h1>
-    <p>Chào mừng bạn đến với trang web du lịch của chúng tôi! 🌍</p>
-    <p>Chúng tôi cung cấp các tour hấp dẫn, giá hợp lý và trải nghiệm tuyệt vời.</p>
-</div>
+
+<!-- 🔹 Giới thiệu chung -->
+<section class="intro-section">
+  <div class="intro-text container">
+    <h2>Về Chúng Tôi</h2>
+    <p>
+      Travel & Tourism tự hào là đơn vị tiên phong trong lĩnh vực du lịch và lữ hành, 
+      mang đến cho khách hàng những hành trình ý nghĩa, an toàn và tràn đầy cảm xúc.
+    </p>
+    <p>
+      Chúng tôi không chỉ tổ chức tour, mà còn tạo nên những kỷ niệm đáng nhớ, 
+      kết nối con người – văn hóa – và thiên nhiên.
+    </p>
+  </div>
+</section>
+
+<!-- 🔹 Sứ mệnh - Tầm nhìn - Giá trị -->
+<section class="mission-section py-5 bg-light text-center">
+  <div class="container">
+    <h3 class="fw-bold text-primary mb-4">SỨ MỆNH & GIÁ TRỊ</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="mission-card p-4 shadow-sm rounded-4 h-100">
+          <img src="{% static 'icons/mission.png' %}" alt="Sứ mệnh" class="mb-3" width="60">
+          <h5 class="fw-bold">Sứ Mệnh</h5>
+          <p>Đem đến trải nghiệm du lịch đáng nhớ, góp phần lan tỏa giá trị văn hóa và vẻ đẹp Việt Nam đến thế giới.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mission-card p-4 shadow-sm rounded-4 h-100">
+          <img src="{% static 'icons/vision.png' %}" alt="Tầm nhìn" class="mb-3" width="60">
+          <h5 class="fw-bold">Tầm Nhìn</h5>
+          <p>Trở thành thương hiệu du lịch hàng đầu Đông Nam Á, tiên phong trong chuyển đổi số và trải nghiệm du lịch thông minh.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mission-card p-4 shadow-sm rounded-4 h-100">
+          <img src="{% static 'icons/value.png' %}" alt="Giá trị" class="mb-3" width="60">
+          <h5 class="fw-bold">Giá Trị Cốt Lõi</h5>
+          <p>Uy tín – Tận tâm – Sáng tạo – Kết nối – Phát triển bền vững.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 🔹 Hệ thống văn phòng -->
+<section class="career-section">
+  <div class="container text-center">
+    <h3 class="mb-4 text-white fw-bold">ĐI MUÔN NƠI CÙNG Travel & Tourism</h3>
+    <div class="career-grid">
+      <div class="career-item"><img src="{% static 'icons/taynambo.png' %}" alt=""><p>TÂY NAM BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/tphcm.png' %}" alt=""><p>TP.HCM</p></div>
+      <div class="career-item"><img src="{% static 'icons/dongnambo.png' %}" alt=""><p>ĐÔNG NAM BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/namtrungbo.png' %}" alt=""><p>NAM TRUNG BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/taynguyen.png' %}" alt=""><p>TÂY NGUYÊN</p></div>
+      <div class="career-item"><img src="{% static 'icons/bactrungbo.png' %}" alt=""><p>BẮC TRUNG BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/bacbo.png' %}" alt=""><p>BẮC BỘ</p></div>
+      <div class="career-item"><img src="{% static 'icons/hanoi.png' %}" alt=""><p>HÀ NỘI</p></div>
+      <div class="career-item"><img src="{% static 'icons/global.png' %}" alt=""><p>VĂN PHÒNG NƯỚC NGOÀI</p></div>
+    </div>
+
+    <a href="{% url 'tour_list' %}" class="btn-view">Khám phá Tour</a>
+  </div>
+</section>
+
+<!-- 🔹 Câu chuyện -->
+<section class="story-section">
+  <div class="container">
+    <h3 class="text-center fw-bold mb-4 text-primary">CÂU CHUYỆN</h3>
+    <div class="story-content">
+      <div class="story-image">
+        <img src="{% static 'images/door.jpg' %}" alt="">
+      </div>
+      <div class="story-text">
+        <h4>Cánh cửa sự nghiệp</h4>
+        <p>
+          Tuổi trẻ là hành trình khám phá và trải nghiệm. Travel & Tourism mở ra cánh cửa cho những người đam mê dịch chuyển,
+          nơi bạn có thể vừa làm việc, vừa tận hưởng cuộc sống trên từng cung đường.
+        </p>
+      </div>
+    </div>
+
+    <div class="story-gallery">
+      <img src="{% static 'images/story1.jpg' %}" alt="">
+      <img src="{% static 'images/story2.jpg' %}" alt="">
+      <img src="{% static 'images/story3.jpg' %}" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- 🔹 Số liệu nổi bật -->
+<section class="stats-section py-5 bg-primary text-white text-center">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3">
+        <h2 class="counter" data-target="1200">0</h2>
+        <p>Tour Đã Tổ Chức</p>
+      </div>
+      <div class="col-md-3">
+        <h2 class="counter" data-target="850">0</h2>
+        <p>Khách Hàng Hài Lòng</p>
+      </div>
+      <div class="col-md-3">
+        <h2 class="counter" data-target="50">0</h2>
+        <p>Đối Tác Quốc Tế</p>
+      </div>
+      <div class="col-md-3">
+        <h2 class="counter" data-target="20">0</h2>
+        <p>Năm Kinh Nghiệm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 🔹 Hiệu ứng JS -->
+<script>
+const counters = document.querySelectorAll('.counter');
+const speed = 100;
+counters.forEach(counter => {
+  const updateCount = () => {
+    const target = +counter.getAttribute('data-target');
+    const count = +counter.innerText;
+    const inc = target / speed;
+    if (count < target) {
+      counter.innerText = Math.ceil(count + inc);
+      setTimeout(updateCount, 10);
+    } else {
+      counter.innerText = target.toLocaleString();
+    }
+  };
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) updateCount();
+    });
+  });
+  observer.observe(counter);
+});
+
+// Lightbox ảnh
+document.querySelectorAll('.story-gallery img').forEach(img => {
+  img.addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox';
+    overlay.innerHTML = `<img src="${img.src}" alt="" class="lightbox-img">`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', () => overlay.remove());
+  });
+});
+
+// Hiệu ứng khi cuộn + hover
+document.addEventListener("DOMContentLoaded", function () {
+  const items = document.querySelectorAll(".career-item");
+  items.forEach(item => {
+    item.addEventListener("mouseenter", () => {
+      item.style.transform = "scale(1.1)";
+      item.style.transition = "transform 0.3s";
+    });
+    item.addEventListener("mouseleave", () => {
+      item.style.transform = "scale(1)";
+    });
+  });
+
+  const fadeEls = document.querySelectorAll(".career-item, .story-section img, .story-text, .mission-card");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add("fade-in");
+    });
+  }, { threshold: 0.1 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  const btn = document.querySelector(".btn-view");
+  if (btn) {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.style.transition = "opacity 0.5s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => {
+        window.location.href = btn.href;
+      }, 400);
+    });
+  }
+});
+</script>
+
 {% endblock %}
