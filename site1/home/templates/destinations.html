@@ -1,31 +1,45 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h3>Danh sách địa điểm</h3>
   <form class="d-flex" method="get" action="/destinations/">
-    <input class="form-control me-2" type="search" placeholder="Tìm kiếm theo tên hoặc vị trí" aria-label="Search" name="q" value="{{ request.GET.q }}">
+    <input
+      class="form-control me-2"
+      type="search"
+      placeholder="Tìm kiếm theo tên hoặc vị trí"
+      aria-label="Search"
+      name="q"
+      value="{{ request.GET.q }}"
+    />
     <button class="btn btn-outline-primary" type="submit">Tìm</button>
   </form>
 </div>
 
 <div class="row">
-  {% if destinations %}
-    {% for dest in destinations %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-          <img src="{{ dest.image_url }}" class="card-img-top" alt="{{ dest.name }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ dest.name }}</h5>
-            <p class="card-text text-truncate">{{ dest.description|truncatewords:20 }}</p>
-            <a href="{% url 'destination_detail' dest.id %}" class="btn btn-primary">Xem chi tiết</a>
-          </div>
-        </div>
+  {% if destinations %} {% for dest in destinations %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      <img
+        src="{{ dest.image_url }}"
+        class="card-img-top"
+        alt="{{ dest.name }}"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ dest.name }}</h5>
+        <p class="card-text text-truncate">
+          {{ dest.description|truncatewords:20 }}
+        </p>
+        <a href="{% url 'destination_detail' dest.id %}" class="btn btn-primary"
+          >Xem chi tiết</a
+        >
       </div>
-    {% endfor %}
-  {% else %}
-    <div class="col-12">
-      <p>Chưa có địa điểm nào. Hãy thử lại sau hoặc thêm dữ liệu từ trang quản trị.</p>
     </div>
+  </div>
+  {% endfor %} {% else %}
+  <div class="col-12">
+    <p>
+      Chưa có địa điểm nào. Hãy thử lại sau hoặc thêm dữ liệu từ trang quản trị.
+    </p>
+  </div>
   {% endif %}
 </div>
 {% endblock %}

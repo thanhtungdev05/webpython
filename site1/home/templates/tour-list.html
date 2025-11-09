@@ -1,95 +1,128 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/tour_list.css' %}">
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/tour_list.css' %}" />
 
 <div class="container mt-5">
   <!-- 🔍 Thanh tìm kiếm -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="page-title">Danh sách Tours</h3>
 
-    <form class="search-form d-flex position-relative" method="get" action="{% url 'tour_list' %}">
-      <input id="searchBox" class="form-control me-2" name="q" placeholder="Tìm tour, địa điểm..."
-             value="{{ q }}" autocomplete="off">
+    <form
+      class="search-form d-flex position-relative"
+      method="get"
+      action="{% url 'tour_list' %}"
+    >
+      <input
+        id="searchBox"
+        class="form-control me-2"
+        name="q"
+        placeholder="Tìm tour, địa điểm..."
+        value="{{ q }}"
+        autocomplete="off"
+      />
       <button class="btn btn-search">Tìm</button>
-      <ul id="suggestList" class="list-group suggestions position-absolute"></ul>
+      <ul
+        id="suggestList"
+        class="list-group suggestions position-absolute"
+      ></ul>
     </form>
   </div>
 
   <!-- 🧭 Danh sách tour -->
   <div class="row">
     {% for tour in tours %}
-      <div class="col-md-4 mb-4">
-        <div class="card tour-card h-100 shadow-sm">
-          <div class="card-media">
-            <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ tour.title }}</h5>
-            <p class="card-meta">{{ tour.destination.name }} · {{ tour.duration }}</p>
-            <p class="card-text text-truncate">{{ tour.schedule|truncatewords:18 }}</p>
+    <div class="col-md-4 mb-4">
+      <div class="card tour-card h-100 shadow-sm">
+        <div class="card-media">
+          <img
+            src="{{ tour.image_url }}"
+            class="card-img-top"
+            alt="{{ tour.title }}"
+          />
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ tour.title }}</h5>
+          <p class="card-meta">
+            {{ tour.destination.name }} · {{ tour.duration }}
+          </p>
+          <p class="card-text text-truncate">
+            {{ tour.schedule|truncatewords:18 }}
+          </p>
 
-            <div class="d-flex align-items-center mt-3">
-              <div class="price fw-bold text-success">{{ tour.price }} VNĐ</div>
-              <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary btn-sm ms-auto">Chi tiết</a>
-            </div>
+          <div class="d-flex align-items-center mt-3">
+            <div class="price fw-bold text-success">{{ tour.price }} VNĐ</div>
+            <a
+              href="{% url 'tour_detail' tour.id %}"
+              class="btn btn-primary btn-sm ms-auto"
+              >Chi tiết</a
+            >
           </div>
         </div>
       </div>
+    </div>
     {% empty %}
-      <div class="col-12 text-center py-5 empty-state">
-        <img src="{% static 'images/empty-tour.svg' %}" alt="empty" width="140" class="mb-3 opacity-75">
-        <h5 class="text-muted">Chưa có tour nào phù hợp</h5>
-        <p class="text-muted">Bạn có thể xem các tour nổi bật hoặc thay đổi bộ lọc.</p>
-        <a href="{% url 'tour_list' %}" class="btn btn-outline-primary mt-3">Xem tất cả tour</a>
-      </div>
+    <div class="col-12 text-center py-5 empty-state">
+      <img
+        src="{% static 'images/empty-tour.svg' %}"
+        alt="empty"
+        width="140"
+        class="mb-3 opacity-75"
+      />
+      <h5 class="text-muted">Chưa có tour nào phù hợp</h5>
+      <p class="text-muted">
+        Bạn có thể xem các tour nổi bật hoặc thay đổi bộ lọc.
+      </p>
+      <a href="{% url 'tour_list' %}" class="btn btn-outline-primary mt-3"
+        >Xem tất cả tour</a
+      >
+    </div>
     {% endfor %}
   </div>
 
   <!-- ✨ Gợi ý khi không có kết quả -->
   {% if similar_tours %}
-    <hr class="my-4">
-    <h5 class="mb-3">Gợi ý cho bạn</h5>
-    <div class="row">
-      {% for t in similar_tours %}
-        <div class="col-md-4 mb-3">
-          <div class="card small-card h-100 shadow-sm">
-            <img src="{{ t.image_url }}" class="card-img-top" alt="{{ t.title }}">
-            <div class="card-body">
-              <h6 class="mb-1">{{ t.title }}</h6>
-              <div class="text-success fw-bold">{{ t.price|floatformat:0 }} VNĐ</div>
-            </div>
+  <hr class="my-4" />
+  <h5 class="mb-3">Gợi ý cho bạn</h5>
+  <div class="row">
+    {% for t in similar_tours %}
+    <div class="col-md-4 mb-3">
+      <div class="card small-card h-100 shadow-sm">
+        <img src="{{ t.image_url }}" class="card-img-top" alt="{{ t.title }}" />
+        <div class="card-body">
+          <h6 class="mb-1">{{ t.title }}</h6>
+          <div class="text-success fw-bold">
+            {{ t.price|floatformat:0 }} VNĐ
           </div>
         </div>
-      {% endfor %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
   {% endif %}
 </div>
 
 <!-- 🧠 Script autocomplete -->
 <script>
-const searchBox = document.getElementById("searchBox");
-const suggestList = document.getElementById("suggestList");
+  const searchBox = document.getElementById("searchBox");
+  const suggestList = document.getElementById("suggestList");
 
-searchBox.addEventListener("input", async () => {
-  const q = searchBox.value.trim();
-  suggestList.innerHTML = "";
-  if (!q) return;
+  searchBox.addEventListener("input", async () => {
+    const q = searchBox.value.trim();
+    suggestList.innerHTML = "";
+    if (!q) return;
 
-  const res = await fetch(`/suggest-destination/?q=${encodeURIComponent(q)}`);
-  const data = await res.json();
+    const res = await fetch(`/suggest-destination/?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
 
-  data.forEach(name => {
-    const li = document.createElement("li");
-    li.textContent = name;
-    li.className = "list-group-item list-group-item-action";
-    li.addEventListener("click", () => {
-      searchBox.value = name;
-      suggestList.innerHTML = "";
+    data.forEach((name) => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      li.className = "list-group-item list-group-item-action";
+      li.addEventListener("click", () => {
+        searchBox.value = name;
+        suggestList.innerHTML = "";
+      });
+      suggestList.appendChild(li);
     });
-    suggestList.appendChild(li);
   });
-});
 </script>
 {% endblock %}

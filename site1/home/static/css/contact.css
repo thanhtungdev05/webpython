@@ -49,19 +49,31 @@
   text-decoration: none;
 }
 
-.social-icon.facebook { background: linear-gradient(135deg, #667eea, #764ba2); }
-.social-icon.instagram { background: linear-gradient(135deg, #f093fb, #f5576c); }
-.social-icon.youtube { background: linear-gradient(135deg, #fa709a, #fee140); }
-.social-icon.linkedin { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-.social-icon.twitter { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.social-icon.facebook {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+.social-icon.instagram {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+.social-icon.youtube {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+}
+.social-icon.linkedin {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+.social-icon.twitter {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
 
 .social-icon:hover {
   transform: translateY(-5px) scale(1.1);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== CONTACT CONTENT ===== */
-.contact-container { width: 100%; }
+.contact-container {
+  width: 100%;
+}
 
 .contact-row {
   display: flex;
@@ -70,12 +82,16 @@
 }
 
 /* ===== FORM SECTION ===== */
-.contact-form-section { flex: 1; min-width: 300px; }
+.contact-form-section {
+  flex: 1;
+  min-width: 300px;
+}
 
-.contact-card, .branch-card {
+.contact-card,
+.branch-card {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   padding: 35px;
 }
 
@@ -100,10 +116,18 @@
   flex-direction: column;
 }
 
-.form-group.full-width { grid-column: 1 / -1; }
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
 
-.form-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
-.required { color: #e74c3c; }
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.required {
+  color: #e74c3c;
+}
 
 .form-input {
   padding: 12px 15px;
@@ -115,11 +139,13 @@
 
 .form-input:focus {
   border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   outline: none;
 }
 
-.form-input::placeholder { color: #aaa; }
+.form-input::placeholder {
+  color: #aaa;
+}
 
 .form-textarea {
   min-height: 120px;
@@ -130,7 +156,9 @@
 select.form-input {
   cursor: pointer;
   appearance: none;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 12px center;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
   padding-right: 35px;
 }
 
@@ -144,7 +172,10 @@ select.form-input {
   gap: 15px;
 }
 
-.g-recaptcha { transform: scale(0.9); transform-origin: 0 0; }
+.g-recaptcha {
+  transform: scale(0.9);
+  transform-origin: 0 0;
+}
 
 .btn-submit {
   padding: 12px 40px;
@@ -156,16 +187,19 @@ select.form-input {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.6);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
 /* ===== BRANCH SECTION ===== */
-.branch-section { flex: 0 0 450px; min-width: 300px; }
+.branch-section {
+  flex: 0 0 450px;
+  min-width: 300px;
+}
 
 .branch-tabs {
   display: flex;
@@ -184,18 +218,37 @@ select.form-input {
   transition: all 0.3s ease;
 }
 
-.branch-tab.active, .branch-tab:hover {
+.branch-tab:hover {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.branch-tab.active {
   background: #007bff;
   color: #fff;
   border-color: #007bff;
 }
 
-.branch-item { margin-bottom: 30px; }
+.branch-divider {
+  height: 1px;
+  background: #e5e5e5;
+  margin: 25px 0;
+}
+/* Branch Items */
+.branch-item {
+  margin-bottom: 30px;
+}
+
+.branch-item:last-child {
+  margin-bottom: 0;
+}
 
 .branch-title {
   font-size: 0.95rem;
   font-weight: 800;
+  color: #1a1a1a;
   margin-bottom: 15px;
+  text-transform: uppercase;
 }
 
 .branch-detail {
@@ -203,7 +256,8 @@ select.form-input {
   align-items: flex-start;
   margin-bottom: 10px;
   font-size: 0.9rem;
-  color: #2c3e50;
+  line-height: 1.6;
+  color: #010000d2;
   font-weight: 600;
 }
 
@@ -211,6 +265,7 @@ select.form-input {
   width: 20px;
   color: #007bff;
   margin-top: 3px;
+  flex-shrink: 0;
 }
 
 /* ===== MAP ===== */
@@ -225,28 +280,49 @@ select.form-input {
 
 .map-responsive iframe {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 8px;
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-  .form-row { grid-template-columns: 1fr; }
-  .branch-section { flex: 1; }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .branch-section {
+    flex: 1;
+  }
 }
 
 @media (max-width: 768px) {
-  .contact-title { font-size: 2rem; }
-  .contact-card, .branch-card { padding: 25px; }
-  .btn-submit { width: 100%; }
-  .g-recaptcha { margin: 0 auto; }
+  .contact-title {
+    font-size: 2rem;
+  }
+  .contact-card,
+  .branch-card {
+    padding: 25px;
+  }
+  .btn-submit {
+    width: 100%;
+  }
+  .g-recaptcha {
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 480px) {
-  .contact-page { padding: 20px 15px; }
-  .contact-title { font-size: 1.5rem; }
-  .contact-subtitle { font-size: 0.9rem; }
+  .contact-page {
+    padding: 20px 15px;
+  }
+  .contact-title {
+    font-size: 1.5rem;
+  }
+  .contact-subtitle {
+    font-size: 0.9rem;
+  }
 }
 .branch-item {
   transition: all 0.3s ease;
@@ -283,4 +359,23 @@ select.form-input {
   background: #fff; /* bắt buộc sáng */
   padding: 30px;
   border-radius: 12px;
+}
+
+/* Branch Tabs - Cải thiện theo travel.com.vn */
+.branch-tab {
+  padding: 10px 18px;
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.branch-tab:hover {
+  border-color: #1565c0;
+  color: #1565c0;
+  background: #e3f2fd;
 }

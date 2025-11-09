@@ -1,178 +1,209 @@
-/* =============================
-   Travel & Tourism - Register Page
-   Đồng bộ với login.css
-============================= */
+/* ============================================
+🌴 Travel & Tourism - Register Page (Fixed 2025)
+============================================ */
 
-body {
-  background: linear-gradient(135deg, #a8edea, #fed6e3);
-  font-family: "Inter", sans-serif;
-  min-height: 100vh;
+/* === Reset cơ bản === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.register-section {
+html, body {
+  height: auto;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, #a0e9ff, #cafdfc);
+  scroll-behavior: smooth;
+}
+
+/* === Gói tổng thể === */
+.register-wrapper {
+  width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 20px;
+  padding: 80px 20px 60px;
 }
 
-.register-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  padding: 40px 45px;
-  max-width: 430px;
+/* === Container chính === */
+.register-container {
+  display: flex;
+  background: #fff;
+  border-radius: 25px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  max-width: 1050px;
   width: 100%;
-  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease;
 }
 
-.register-card:hover {
-  transform: translateY(-3px);
+/* === Left Section === */
+.register-left {
+  flex: 1;
+  background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')
+      center/cover no-repeat;
+  color: #fff;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
-/* Header */
-.register-header {
+.brand-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.register-left p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 340px;
+}
+
+/* === Right Section === */
+.register-right {
+  flex: 1;
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-box {
+  width: 100%;
+  max-width: 360px;
+}
+
+/* === Tiêu đề & mô tả === */
+.register-box h2 {
+  font-weight: 700;
+  color: #0077b6;
   text-align: center;
+}
+
+.register-box p {
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
   margin-bottom: 25px;
 }
 
-.register-header .icon {
-  font-size: 3rem;
-  color: #0d6efd;
-  margin-bottom: 8px;
+/* === Input Group === */
+.input-group {
+  position: relative;
+  margin-bottom: 18px;
 }
 
-.register-header h2 {
-  font-weight: 700;
-  color: #0d6efd;
-  margin-bottom: 8px;
+.input-group i {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #0077b6;
 }
 
-.register-header p {
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* Form */
-.register-form label {
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 5px;
-  display: block;
-}
-
-.register-form input,
-.register-form select {
+input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ced4da;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  margin-bottom: 15px;
+  transition: 0.3s;
   font-size: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  transition: all 0.3s ease;
 }
 
-.register-form input:focus,
-.register-form select:focus {
-  border-color: #0d6efd;
+input:focus {
+  border-color: #00b4d8;
+  box-shadow: 0 0 8px rgba(0, 180, 216, 0.25);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
 }
 
-/* Button */
+/* === Nút đăng ký === */
 .btn-register {
   width: 100%;
-  background-color: #0d6efd;
+  background: linear-gradient(135deg, #0096c7, #48cae4);
   color: #fff;
-  padding: 10px;
-  border-radius: 10px;
   border: none;
+  padding: 12px;
+  border-radius: 12px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-register:hover {
-  background-color: #0b5ed7;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 150, 199, 0.3);
 }
 
-/* Text liên kết */
+/* Loader bên trong nút */
+.btn-loader {
+  display: none;
+  width: 22px;
+  height: 22px;
+  border: 3px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.btn-register.loading .btn-text {
+  visibility: hidden;
+}
+
+.btn-register.loading .btn-loader {
+  display: inline-block;
+}
+
+/* === Link chuyển sang đăng nhập === */
 .login-text {
   text-align: center;
-  font-size: 0.9rem;
-  color: #555;
   margin-top: 20px;
+  color: #555;
 }
 
-.login-link {
-  color: #0d6efd;
+.link-login {
+  color: #0096c7;
   font-weight: 600;
   text-decoration: none;
 }
 
-.login-link:hover {
+.link-login:hover {
   text-decoration: underline;
 }
 
-/* Hiệu ứng xuất hiện */
+/* === Hiệu ứng animation === */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.register-card {
-  animation: fadeIn 0.5s ease-in-out;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* Responsive */
-@media (max-width: 576px) {
-  .register-card {
-    padding: 30px 25px;
+/* === Responsive Mobile === */
+@media (max-width: 900px) {
+  .register-container {
+    flex-direction: column;
+    max-width: 480px;
   }
 
-  .register-header h2 {
-    font-size: 1.5rem;
+  .register-left {
+    display: none;
   }
-}
 
-/* =============================
-   Gợi ý / yêu cầu mật khẩu
-   (mờ, tinh tế giống login.css)
-============================= */
-.helptext,
-.helptext ul,
-.helptext li {
-  color: rgba(0, 0, 0, 0.5); /* Màu xám nhạt, mờ */
-  font-size: 0.8rem; /* Nhỏ hơn chữ form */
-  line-height: 1.4;
-  margin-top: 4px;
-  margin-bottom: 0;
-  list-style: disc;
-  padding-left: 20px;
-}
+  .register-right {
+    padding: 35px 25px;
+  }
 
-/* Làm mờ thêm các yêu cầu mật khẩu chi tiết */
-.register-form ul.helptext,
-.register-form ul.helptext li {
-  color: rgba(0, 0, 0, 0.45); /* Mờ hơn nữa */
-  font-size: 0.8rem;
-  line-height: 1.5;
-  margin-left: 15px;
-  list-style: disc;
-  font-style: italic;
-}
-
-/* Đảm bảo canh chỉnh đẹp */
-.register-form ul.helptext {
-  margin-top: 4px;
-  margin-bottom: 8px;
-  padding-left: 18px;
+  .register-wrapper {
+    padding: 40px 10px 60px;
+  }
 }

@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
 <!-- 🔍 Thanh tiêu đề tìm kiếm -->
 <section class="py-5 bg-light text-center">
   <div class="container">
-    <h2 class="fw-bold text-primary mb-2">Kết quả tìm kiếm cho "{{ query }}"</h2>
+    <h2 class="fw-bold text-primary mb-2">
+      Kết quả tìm kiếm cho "{{ query }}"
+    </h2>
     <p class="text-muted">Hiển thị các tour phù hợp với từ khóa của bạn</p>
   </div>
 </section>
@@ -13,26 +13,43 @@
 <!-- 🎯 Kết quả tìm kiếm -->
 <div class="container py-5">
   <div class="row">
-    {% if results %}
-      {% for tour in results %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0 shadow-sm hover-shadow">
-          <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.name }}">
-          <div class="card-body">
-            <h5 class="card-title fw-semibold">{{ tour.name }}</h5>
-            <p class="card-text text-muted">{{ tour.description|truncatewords:20 }}</p>
-            <a href="{% url 'tour_detail' tour.id %}" class="btn btn-outline-primary">Xem chi tiết</a>
-          </div>
+    {% if results %} {% for tour in results %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm hover-shadow">
+        <img
+          src="{{ tour.image_url }}"
+          class="card-img-top"
+          alt="{{ tour.name }}"
+        />
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">{{ tour.name }}</h5>
+          <p class="card-text text-muted">
+            {{ tour.description|truncatewords:20 }}
+          </p>
+          <a
+            href="{% url 'tour_detail' tour.id %}"
+            class="btn btn-outline-primary"
+            >Xem chi tiết</a
+          >
         </div>
       </div>
-      {% endfor %}
-    {% else %}
-      <div class="col-12 text-center py-5">
-        <img src="{% static 'images/empty-tour.svg' %}" alt="no results" width="150" class="mb-3 opacity-75">
-        <h5 class="fw-bold text-muted">Không tìm thấy kết quả phù hợp</h5>
-        <p class="text-muted">Vui lòng thử lại với từ khóa khác hoặc xem tất cả tour.</p>
-        <a href="{% url 'tour_list' %}" class="btn btn-primary mt-3">Xem tất cả tour</a>
-      </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="col-12 text-center py-5">
+      <img
+        src="{% static 'images/empty-tour.svg' %}"
+        alt="no results"
+        width="150"
+        class="mb-3 opacity-75"
+      />
+      <h5 class="fw-bold text-muted">Không tìm thấy kết quả phù hợp</h5>
+      <p class="text-muted">
+        Vui lòng thử lại với từ khóa khác hoặc xem tất cả tour.
+      </p>
+      <a href="{% url 'tour_list' %}" class="btn btn-primary mt-3"
+        >Xem tất cả tour</a
+      >
+    </div>
     {% endif %}
   </div>
 </div>

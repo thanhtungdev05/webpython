@@ -1,7 +1,7 @@
 /* Về chúng tôi - Giao diện Vietravel */
 body {
   background-color: #f8f9fa;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .intro-section {
@@ -57,7 +57,7 @@ body {
 }
 
 .btn-view {
-  background:  #004080;
+  background: #004080;
   color: #fff;
   border: none;
   padding: 10px 30px;
@@ -66,7 +66,7 @@ body {
 }
 
 .btn-view:hover {
-  background:  #004080;
+  background: #004080;
 }
 
 .story-section {
@@ -124,7 +124,7 @@ body {
 .btn-view {
   display: inline-block;
   padding: 10px 24px;
-  background-color:  #004080;
+  background-color: #004080;
   color: white;
   border-radius: 8px;
   text-decoration: none;
@@ -133,10 +133,12 @@ body {
 }
 
 .btn-view:hover {
-  background-color:  #004080;
+  background-color: #004080;
 }
 /* Fade-in hiệu ứng khi cuộn */
-.career-item, .story-section img, .story-text {
+.career-item,
+.story-section img,
+.story-text {
   opacity: 0;
   transform: translateY(30px);
   transition: all 0.6s ease-in-out;
@@ -164,17 +166,38 @@ body {
   background-color: #e5ff00;
   transform: scale(1.05);
 }
-.stats-section { background: #f0f8ff; padding: 60px 0; }
-.stats-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.counter { font-size: 2.5rem; color: #004080; font-weight: bold; }
-.stats-section p { color: #333; }
+.stats-section {
+  background: #f0f8ff;
+  padding: 60px 0;
+}
+.stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.counter {
+  font-size: 2.5rem;
+  color: #004080;
+  font-weight: bold;
+}
+.stats-section p {
+  color: #333;
+}
 .lightbox {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: flex; justify-content: center; align-items: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
 }
-.lightbox-img { max-width: 90%; max-height: 80%; border-radius: 10px; }
+.lightbox-img {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
 .fade-in {
   opacity: 1 !important;
   transform: translateY(0);

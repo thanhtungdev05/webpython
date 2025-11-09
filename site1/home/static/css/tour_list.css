@@ -149,7 +149,8 @@
 }
 
 /* ⚙️ Đảm bảo phần chứa tour không chặn dropdown */
-.row, .container {
+.row,
+.container {
   position: relative;
   z-index: 1;
   overflow: visible !important; /* ngăn card cắt phần gợi ý */

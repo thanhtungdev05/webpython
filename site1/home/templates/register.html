@@ -1,35 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Đăng ký tài khoản - Travel & Tourism{% endblock %}
+{% block title %}Đăng ký - Travel & Tourism{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/register.css' %}?v=1">
 {% endblock %}
 
 {% block content %}
-<section class="register-section">
-  <div class="register-wrapper">
-    <div class="register-card">
-      <div class="register-header text-center">
-        <i class="bi bi-person-plus-fill icon"></i>
-        <h2>Đăng ký tài khoản</h2>
-        <p>Tham gia để khám phá thế giới cùng Travel & Tourism 🌍</p>
+<section class="register-wrapper">
+  <div class="register-container">
+    
+    <!-- Left: Travel Image + Text -->
+    <div class="register-left">
+      <h1 class="brand-title">✈️ Travel & Tourism</h1>
+      <p>Tham gia ngay — Cùng chúng tôi khám phá vẻ đẹp thế giới 🌍</p>
+      
+    </div>
+
+    <!-- Right: Register Form -->
+    <div class="register-right">
+      <div class="register-box">
+        <h2>Tạo tài khoản mới</h2>
+        <p>Chỉ mất 1 phút để bắt đầu hành trình khám phá của bạn!</p>
+
+        <form method="POST" id="registerForm">
+          {% csrf_token %}
+
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            {{ form.username }}
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            {{ form.email }}
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            {{ form.password1 }}
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-key"></i>
+            {{ form.password2 }}
+          </div>
+
+          <button type="submit" id="registerBtn" class="btn-register">
+            <span class="btn-text">Đăng ký</span>
+            <span class="btn-loader"></span>
+          </button>
+        </form>
+
+        <p class="login-text">
+          Đã có tài khoản?
+          <a href="{% url 'login' %}" class="link-login">Đăng nhập ngay</a>
+        </p>
       </div>
-
-      <form method="POST" class="register-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-register w-100 mt-3">
-          <i class="bi bi-send-fill"></i> Đăng ký ngay
-        </button>
-      </form>
-
-      <p class="login-text text-center mt-3">
-        Đã có tài khoản?
-        <a href="{% url 'login' %}" class="login-link">Đăng nhập</a>
-      </p>
     </div>
   </div>
 </section>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if form.errors %}
+<script>
+  Swal.fire({
+    icon: "error",
+    title: "Đăng ký thất bại!",
+    text: "Vui lòng kiểm tra lại thông tin ❌",
+    confirmButtonColor: "#e74c3c",
+  });
+</script>
+{% endif %}
+
+<script>
+  const form = document.getElementById("registerForm");
+  const btn = document.getElementById("registerBtn");
+  form.addEventListener("submit", () => btn.classList.add("loading"));
+</script>
 {% endblock %}

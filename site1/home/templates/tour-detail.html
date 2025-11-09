@@ -92,8 +92,10 @@
       </div>
 
       <div class="favorite-btn mt-3">
-        <button class="btn btn-outline-danger w-100">❤️ Thêm vào yêu thích</button>
-      </div>
+  <a href="{% url 'add_favorite' tour.id %}" class="btn btn-outline-danger w-100">
+    ❤️ Thêm vào yêu thích
+  </a>
+</div>
     </div>
   </div>
 

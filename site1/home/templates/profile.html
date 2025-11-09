@@ -1,13 +1,7 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Hồ sơ cá nhân{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}?v=2">
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Hồ sơ cá nhân
+{%endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}?v=2" />
+{% endblock %} {% block content %}
 <div class="container py-5">
   <h2 class="text-center mb-4 fw-bold">👤 Hồ sơ cá nhân</h2>
 
@@ -19,13 +13,42 @@
     </div>
   </div>
 
-  <hr class="my-4">
+  <hr class="my-4" />
 
-  <h4 class="fw-semibold mb-3">🧳 Lịch sử đặt tour</h4>
-
+  <h4 class="fw-semibold mb-3">❤️Tour Yêu Thích </h4>
+  {% if favorites %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for f in favorites %}
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 rounded-3">
+          {% if f.tour.image %}
+            <img src="{{ f.tour.image.url }}" class="card-img-top" alt="{{ f.tour.title }}">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title text-primary">{{ f.tour.title }}</h5>
+            <p class="card-text">{{ f.tour.description|truncatewords:20 }}</p>
+            <a href="{% url 'tour_detail' f.tour.id %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-eye"></i> Xem chi tiết
+            </a>
+            <a href="{% url 'remove_favorite' f.tour.id %}" class="btn btn-outline-danger btn-sm">
+              <i class="bi bi-x-circle"></i> Xóa
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info text-center mt-3">
+    Bạn chưa thêm tour nào vào yêu thích 💔
+  </div>
+{% endif %}
+<h4 class="fw-semibold mb-3">🧳 Lịch sử đặt tour</h4>
   {% if bookings %}
   <div class="table-responsive">
-    <table class="table table-bordered table-hover text-center align-middle shadow-sm">
+    <table
+      class="table table-bordered table-hover text-center align-middle shadow-sm"
+    >
       <thead class="table-dark">
         <tr>
           <th>Mã đơn</th>
@@ -34,7 +57,7 @@
           <th>Số lượng</th>
           <th>Tổng tiền (VNĐ)</th>
           <th>Trạng thái</th>
-          <th style="width: 180px;">Thao tác</th>
+          <th style="width: 180px">Thao tác</th>
         </tr>
       </thead>
       <tbody>
@@ -44,37 +67,42 @@
           <td class="text-start ps-3">{{ b.tour.title }}</td>
           <td>{{ b.booking_date|date:"d/m/Y" }}</td>
           <td>{{ b.pax }}</td>
-          <td class="fw-bold text-primary">{{ b.total_price|floatformat:0 }}</td>
+          <td class="fw-bold text-primary">
+            {{ b.total_price|floatformat:0 }}
+          </td>
           <td>
             {% if b.status == "Pending" %}
-              <span class="badge bg-warning text-dark">Đang duyệt</span>
+            <span class="badge bg-warning text-dark">Đang duyệt</span>
             {% elif b.status == "Duyệt" %}
-              <span class="badge bg-success">Đã duyệt</span>
+            <span class="badge bg-success">Đã duyệt</span>
             {% elif b.status == "Đã thanh toán" %}
-              <span class="badge bg-info text-dark">Đã thanh toán</span>
+            <span class="badge bg-info text-dark">Đã thanh toán</span>
             {% elif b.status == "Hủy" %}
-              <span class="badge bg-danger">Đã hủy</span>
+            <span class="badge bg-danger">Đã hủy</span>
             {% endif %}
           </td>
           <td>
             <div class="d-flex flex-wrap justify-content-center gap-1">
               {% if b.status == "Pending" %}
-                <button class="btn btn-outline-danger btn-sm cancel-booking-btn">
-                  <i class="bi bi-x-circle"></i> Hủy
-                </button>
+              <button class="btn btn-outline-danger btn-sm cancel-booking-btn">
+                <i class="bi bi-x-circle"></i> Hủy
+              </button>
               {% elif b.status == "Duyệt" %}
-                <a href="{% url 'payment_qr' b.id %}?amount={{ b.total_price }}" class="btn btn-outline-primary btn-sm">
-                  <i class="bi bi-qr-code"></i> QR
-                </a>
-                <button class="btn btn-outline-success btn-sm pay-cash-btn">
-                  <i class="bi bi-cash-coin"></i> Tiền mặt
-                </button>
+              <a
+                href="{% url 'payment_qr' b.id %}?amount={{ b.total_price }}"
+                class="btn btn-outline-primary btn-sm"
+              >
+                <i class="bi bi-qr-code"></i> QR
+              </a>
+              <button class="btn btn-outline-success btn-sm pay-cash-btn">
+                <i class="bi bi-cash-coin"></i> Tiền mặt
+              </button>
               {% elif b.status == "Đã thanh toán" %}
-                <button class="btn btn-outline-warning btn-sm rate-btn">
-                  <i class="bi bi-star"></i> Đánh giá
-                </button>
+              <button class="btn btn-outline-warning btn-sm rate-btn">
+                <i class="bi bi-star"></i> Đánh giá
+              </button>
               {% else %}
-                <small class="text-muted">-</small>
+              <small class="text-muted">-</small>
               {% endif %}
               <button class="btn btn-outline-info btn-sm detail-btn">
                 <i class="bi bi-eye"></i> Chi tiết
@@ -100,89 +128,93 @@
   </div>
   {% endif %}
 </div>
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-$(function() {
+  $(function () {
+    // 💰 Thanh toán tiền mặt
+    $(".pay-cash-btn").click(function () {
+      const bookingId = $(this).closest("tr").data("booking-id");
+      Swal.fire({
+        title: "Xác nhận thanh toán?",
+        text: "Bạn có chắc muốn thanh toán tiền mặt cho tour này?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#198754",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Xác nhận",
+        cancelButtonText: "Hủy",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.post("{% url 'pay_cash' %}", {
+            booking_id: bookingId,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          })
+            .done((res) => {
+              if (res.success) {
+                Swal.fire(
+                  "Thành công!",
+                  "Thanh toán thành công ✅",
+                  "success"
+                ).then(() => location.reload());
+              } else {
+                Swal.fire("Lỗi!", res.error, "error");
+              }
+            })
+            .fail(() =>
+              Swal.fire("Lỗi hệ thống!", "Vui lòng thử lại sau!", "error")
+            );
+        }
+      });
+    });
+    // 💵 Định dạng lại cột "Tổng tiền (VNĐ)" cho dễ đọc
+    $(".table tbody tr").each(function () {
+      const moneyCell = $(this).find("td:eq(4)"); // Cột thứ 5 là Tổng tiền
+      const rawValue = moneyCell.text().trim();
 
-  // 💰 Thanh toán tiền mặt
-  $(".pay-cash-btn").click(function() {
-    const bookingId = $(this).closest("tr").data("booking-id");
-    Swal.fire({
-      title: "Xác nhận thanh toán?",
-      text: "Bạn có chắc muốn thanh toán tiền mặt cho tour này?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#198754",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Xác nhận",
-      cancelButtonText: "Hủy"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.post("{% url 'pay_cash' %}", {
-          booking_id: bookingId,
-          csrfmiddlewaretoken: "{{ csrf_token }}"
-        })
-        .done(res => {
-          if (res.success) {
-            Swal.fire("Thành công!", "Thanh toán thành công ✅", "success").then(() => location.reload());
-          } else {
-            Swal.fire("Lỗi!", res.error, "error");
-          }
-        })
-        .fail(() => Swal.fire("Lỗi hệ thống!", "Vui lòng thử lại sau!", "error"));
+      if (!isNaN(rawValue) && rawValue !== "") {
+        const formatted = Number(rawValue).toLocaleString("vi-VN"); // Thêm dấu phẩy
+        moneyCell.text(`${formatted} VNĐ`);
       }
     });
-  });
-// 💵 Định dạng lại cột "Tổng tiền (VNĐ)" cho dễ đọc
-$(".table tbody tr").each(function() {
-  const moneyCell = $(this).find("td:eq(4)"); // Cột thứ 5 là Tổng tiền
-  const rawValue = moneyCell.text().trim();
-
-  if (!isNaN(rawValue) && rawValue !== "") {
-    const formatted = Number(rawValue).toLocaleString("vi-VN"); // Thêm dấu phẩy
-    moneyCell.text(`${formatted} VNĐ`);
-  }
-});
-  // ❌ Hủy tour
-  $(".cancel-booking-btn").click(function() {
-    const bookingId = $(this).closest("tr").data("booking-id");
-    Swal.fire({
-      title: "Bạn có chắc chắn muốn hủy tour?",
-      text: "Hành động này không thể hoàn tác!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Hủy tour",
-      cancelButtonText: "Quay lại"
-    }).then(result => {
-      if (result.isConfirmed) {
-        $.post("{% url 'cancel_booking_ajax' %}", {
-          booking_id: bookingId,
-          csrfmiddlewaretoken: "{{ csrf_token }}"
-        })
-        .done(res => {
-          if (res.success) {
-            Swal.fire("Đã hủy!", "Tour của bạn đã được hủy.", "success").then(() => location.reload());
-          } else {
-            Swal.fire("Lỗi!", res.error, "error");
-          }
-        });
-      }
+    // ❌ Hủy tour
+    $(".cancel-booking-btn").click(function () {
+      const bookingId = $(this).closest("tr").data("booking-id");
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn hủy tour?",
+        text: "Hành động này không thể hoàn tác!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Hủy tour",
+        cancelButtonText: "Quay lại",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.post("{% url 'cancel_booking_ajax' %}", {
+            booking_id: bookingId,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          }).done((res) => {
+            if (res.success) {
+              Swal.fire("Đã hủy!", "Tour của bạn đã được hủy.", "success").then(
+                () => location.reload()
+              );
+            } else {
+              Swal.fire("Lỗi!", res.error, "error");
+            }
+          });
+        }
+      });
     });
-  });
 
-  // 👁 Chi tiết tour
-  $(".detail-btn").click(function() {
-    const tr = $(this).closest("tr");
-    Swal.fire({
-      title: "Chi tiết tour",
-      html: `
+    // 👁 Chi tiết tour
+    $(".detail-btn").click(function () {
+      const tr = $(this).closest("tr");
+      Swal.fire({
+        title: "Chi tiết tour",
+        html: `
         <div class="text-start">
           <p><b>Tên tour:</b> ${tr.find("td:eq(1)").text()}</p>
           <p><b>Ngày đặt:</b> ${tr.find("td:eq(2)").text()}</p>
@@ -190,56 +222,56 @@ $(".table tbody tr").each(function() {
           <p><b>Trạng thái:</b> ${tr.find("td:eq(5)").text()}</p>
         </div>
       `,
-      icon: "info",
-      confirmButtonText: "Đóng"
+        icon: "info",
+        confirmButtonText: "Đóng",
+      });
     });
-  });
 
-  // 🌟 Đánh giá tour
-  $(".rate-btn").click(function() {
-    Swal.fire({
-      title: "Đánh giá tour 🌟",
-      html: `
+    // 🌟 Đánh giá tour
+    $(".rate-btn").click(function () {
+      Swal.fire({
+        title: "Đánh giá tour 🌟",
+        html: `
         <div id="rating-stars" style="font-size:24px; color:#FFD700; cursor:pointer;">★★★★★</div>
         <textarea id="comment" class="form-control mt-3" placeholder="Nhập nhận xét của bạn..."></textarea>
       `,
-      showCancelButton: true,
-      confirmButtonText: "Gửi",
-      cancelButtonText: "Hủy",
-      didOpen: () => {
-        const stars = $("#rating-stars");
-        let rating = 5;
-        stars.on("mousemove click", function(e) {
-          const x = e.pageX - stars.offset().left;
-          rating = Math.ceil(x / (stars.width() / 5));
-          stars.text("★★★★★".slice(0, rating) + "☆☆☆☆☆".slice(rating));
-        });
-      },
-    }).then(result => {
-      if (result.isConfirmed) {
-        Swal.fire("Cảm ơn!", "Đánh giá của bạn đã được gửi 🎉", "success");
-      }
+        showCancelButton: true,
+        confirmButtonText: "Gửi",
+        cancelButtonText: "Hủy",
+        didOpen: () => {
+          const stars = $("#rating-stars");
+          let rating = 5;
+          stars.on("mousemove click", function (e) {
+            const x = e.pageX - stars.offset().left;
+            rating = Math.ceil(x / (stars.width() / 5));
+            stars.text("★★★★★".slice(0, rating) + "☆☆☆☆☆".slice(rating));
+          });
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire("Cảm ơn!", "Đánh giá của bạn đã được gửi 🎉", "success");
+        }
+      });
     });
-  });
 
-  // 🧾 Xuất PDF (chỉ 1 lần)
-  $("#export-pdf").click(function() {
-    Swal.fire({
-      icon: "success",
-      title: "Đang tạo file PDF...",
-      text: "Vui lòng chờ trong giây lát ⏳",
-      timer: 2000,
-      showConfirmButton: false
+    // 🧾 Xuất PDF (chỉ 1 lần)
+    $("#export-pdf").click(function () {
+      Swal.fire({
+        icon: "success",
+        title: "Đang tạo file PDF...",
+        text: "Vui lòng chờ trong giây lát ⏳",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     });
   });
-});
-window.addEventListener("scroll", function() {
-  const navbar = document.querySelector(".custom-navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
-  }
-});
+  window.addEventListener("scroll", function () {
+    const navbar = document.querySelector(".custom-navbar");
+    if (window.scrollY > 50) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  });
 </script>
 {% endblock %}

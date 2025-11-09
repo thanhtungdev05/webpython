@@ -46,9 +46,9 @@
 .gallery .main-img {
   width: 100%;
   height: 350px;
-  object-fit: cover;   /* Giúp ảnh đều nhau mà không méo */
+  object-fit: cover; /* Giúp ảnh đều nhau mà không méo */
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* 🏷 Tiêu đề & mô tả */
@@ -114,14 +114,14 @@
 
 .similar-tours .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Ảnh trong tour tương tự đều nhau */
 .similar-tours .card-img-top {
   width: 100%;
   height: 200px;
-  object-fit: cover;   /* ảnh đồng đều, không méo */
+  object-fit: cover; /* ảnh đồng đều, không méo */
   border-radius: 10px 10px 0 0;
 }
 
@@ -154,7 +154,6 @@
   padding: 10px 15px;
   border-radius: 8px;
 }
-
 
 /* 🧭 Breadcrumb */
 .breadcrumb-container {
