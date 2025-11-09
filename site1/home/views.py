@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Destination, Tour, Booking, News, UserProfile
 from .forms import ContactForm, BookingForm, NewsForm
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Tour, News  # đổi lại đúng tên model của bạn
+from .models import Tour, News, Favorite  # đổi lại đúng tên model của bạn
 from .forms import UserRegisterForm, UserLoginForm
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
@@ -136,10 +136,14 @@ def booking_view(request, tour_id):
             user=request.user,
             full_name=request.user.get_full_name() or request.user.username,
             email=request.user.email,
-            phone=getattr(request.user, 'phone', ''),  # hoặc request.user.profile.phone nếu có profile model
+            phone=getattr(request.user, 'phone', ''),
             pax=pax,
             status='Pending'
         )
+
+        # ✅ Sau khi đặt tour, xóa tour khỏi yêu thích nếu có
+        from .models import Favorite
+        Favorite.objects.filter(user=request.user, tour=tour).delete()
 
         messages.success(request, f'Bạn đã đặt tour "{tour.title}" thành công!')
         return redirect('booking_success')
@@ -221,7 +225,7 @@ def tour_list(request):
     duration = request.GET.get('duration')  # 👈 thêm dòng này
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-
+    
     # Bộ lọc
     if destination:
         tours = tours.filter(destination__name__icontains=destination)
@@ -271,14 +275,16 @@ def suggest_city(request):
         )
     return JsonResponse(results, safe=False)
 @login_required
-@login_required
 def profile(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
     total_bookings = bookings.count()
     cancelled_bookings = bookings.filter(status='Hủy').count()
     completed_bookings = bookings.filter(status='Duyệt').count()
 
-    # Nếu người dùng thay đổi pax qua form (dự phòng, AJAX xử lý riêng)
+    # 🩶 Lấy danh sách tour yêu thích
+    favorites = Favorite.objects.filter(user=request.user).select_related('tour')
+
+    # ✅ Cập nhật số lượng pax (nếu có gửi POST)
     if request.method == 'POST':
         booking_id = request.POST.get('booking_id')
         new_pax = request.POST.get('pax')
@@ -291,6 +297,7 @@ def profile(request):
 
     context = {
         'bookings': bookings,
+        'favorites': favorites,
         'total_bookings': total_bookings,
         'cancelled_bookings': cancelled_bookings,
         'completed_bookings': completed_bookings,
@@ -300,6 +307,7 @@ def profile(request):
         context['admin_bookings'] = Booking.objects.all().order_by('-created_at')
 
     return render(request, 'profile.html', context)
+
 
 # -----------------------
 # 💰 Cập nhật số lượng khách
@@ -461,3 +469,25 @@ def update_customer_info(request, pk):
         booking.save()
         return JsonResponse({"success": True})
     return JsonResponse({"success": False})
+# ==========================
+# ❤️ Thêm tour vào yêu thích
+# ==========================
+@login_required
+def add_favorite(request, tour_id):
+    tour = get_object_or_404(Tour, id=tour_id)
+    Favorite.objects.get_or_create(user=request.user, tour=tour)
+    messages.success(request, f'Đã thêm "{tour.title}" vào danh sách yêu thích!')
+    
+    # ✅ Chuyển đến trang Tour Yêu Thích
+    return redirect('profile')
+
+
+# ==========================
+# 💔 Xóa tour khỏi yêu thích
+# ==========================
+@login_required
+def remove_favorite(request, tour_id):
+    tour = get_object_or_404(Tour, id=tour_id)
+    Favorite.objects.filter(user=request.user, tour=tour).delete()
+    messages.info(request, f'Đã xóa "{tour.title}" khỏi danh sách yêu thích.')
+    return redirect('profile')
