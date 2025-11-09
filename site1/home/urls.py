@@ -45,6 +45,11 @@ urlpatterns = [
     # 📞 Giới thiệu & liên hệ
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
+    # Favorite tours
+    path('favorite/add/<int:tour_id>/', views.add_favorite, name='add_favorite'),
+    path('favorite/remove/<int:tour_id>/', views.remove_favorite, name='remove_favorite'),
+    
+
 
     # ⚙️ API Gợi ý tìm kiếm
     path('suggest-destination/', views.suggest_destination, name='suggest_destination'),
