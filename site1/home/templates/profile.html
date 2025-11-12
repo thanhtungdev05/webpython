@@ -15,35 +15,45 @@
 
   <hr class="my-4" />
 
-  <h4 class="fw-semibold mb-3">❤️Tour Yêu Thích </h4>
+  <h4 class="fw-semibold mb-3">❤️Tour Yêu Thích</h4>
   {% if favorites %}
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for f in favorites %}
-      <div class="col">
-        <div class="card h-100 shadow-sm border-0 rounded-3">
-          {% if f.tour.image %}
-            <img src="{{ f.tour.image.url }}" class="card-img-top" alt="{{ f.tour.title }}">
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title text-primary">{{ f.tour.title }}</h5>
-            <p class="card-text">{{ f.tour.description|truncatewords:20 }}</p>
-            <a href="{% url 'tour_detail' f.tour.id %}" class="btn btn-outline-primary btn-sm">
-              <i class="bi bi-eye"></i> Xem chi tiết
-            </a>
-            <a href="{% url 'remove_favorite' f.tour.id %}" class="btn btn-outline-danger btn-sm">
-              <i class="bi bi-x-circle"></i> Xóa
-            </a>
-          </div>
+    <div class="col">
+      <div class="card h-100 shadow-sm border-0 rounded-3">
+        {% if f.tour.image %}
+        <img
+          src="{{ f.tour.image.url }}"
+          class="card-img-top"
+          alt="{{ f.tour.title }}"
+        />
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ f.tour.title }}</h5>
+          <p class="card-text">{{ f.tour.description|truncatewords:20 }}</p>
+          <a
+            href="{% url 'tour_detail' f.tour.id %}"
+            class="btn btn-outline-primary btn-sm"
+          >
+            <i class="bi bi-eye"></i> Xem chi tiết
+          </a>
+          <a
+            href="{% url 'remove_favorite' f.tour.id %}"
+            class="btn btn-outline-danger btn-sm"
+          >
+            <i class="bi bi-x-circle"></i> Xóa
+          </a>
         </div>
       </div>
+    </div>
     {% endfor %}
   </div>
-{% else %}
+  {% else %}
   <div class="alert alert-info text-center mt-3">
     Bạn chưa thêm tour nào vào yêu thích 💔
   </div>
-{% endif %}
-<h4 class="fw-semibold mb-3">🧳 Lịch sử đặt tour</h4>
+  {% endif %}
+  <h4 class="fw-semibold mb-3">🧳 Lịch sử đặt tour</h4>
   {% if bookings %}
   <div class="table-responsive">
     <table
@@ -102,7 +112,7 @@
                 <i class="bi bi-star"></i> Đánh giá
               </button>
               {% else %}
-              <small class="text-muted">-</small>
+              <small class="text-muted"></small>
               {% endif %}
               <button class="btn btn-outline-info btn-sm detail-btn">
                 <i class="bi bi-eye"></i> Chi tiết
