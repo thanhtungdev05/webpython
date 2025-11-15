@@ -31,7 +31,7 @@ def home(request):
         'tours': tours,
         'news': news,})
 
-
+def tour_list(request):
     q = request.GET.get('q', '').strip()
     destination = request.GET.get('destination', '').strip()
     city = request.GET.get('city', '').strip()
@@ -491,3 +491,14 @@ def remove_favorite(request, tour_id):
     Favorite.objects.filter(user=request.user, tour=tour).delete()
     messages.info(request, f'Đã xóa "{tour.title}" khỏi danh sách yêu thích.')
     return redirect('profile')
+
+
+
+
+
+
+
+
+
+
+

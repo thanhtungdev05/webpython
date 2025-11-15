@@ -27,10 +27,31 @@ class Destination(models.Model):
         if self.image and hasattr(self.image, 'url'):
             return self.image.url
         return "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
+    @property
+    def country_type(self):
+        vn_keywords = ["việt nam", "vn", "hà nội", "đà nẵng", "hạ long", "huế", 
+               "phú quốc", "quy nhơn", "sapa", "mộc châu", "pleiku",
+               "đà lạt", "vũng tàu", "nha trang", "buôn ma thuột", "hội an"]
+        if any(k.lower() in self.name.lower() for k in vn_keywords):
+            return "Trong nước"
+        return "Ngoài nước"
+
 
 
 # 🚌 Tour du lịch
 class Tour(models.Model):
+    TOUR_TYPE_CHOICES = (
+        ('domestic', 'Trong nước'),
+        ('foreign', 'Ngoài nước'),
+    )
+
+    tour_type = models.CharField(
+        max_length=20,
+        choices=TOUR_TYPE_CHOICES,
+        default='domestic',
+        verbose_name="Loại tour"
+    )
+
     destination = models.ForeignKey(
         Destination,
         on_delete=models.CASCADE,

@@ -2,78 +2,51 @@
 <link rel="stylesheet" href="{% static 'css/tour_list.css' %}" />
 
 <div class="container mt-5">
+
   <!-- 🔍 Thanh tìm kiếm -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="page-title">Danh sách Tours</h3>
-
-    <form
-      class="search-form d-flex position-relative"
-      method="get"
-      action="{% url 'tour_list' %}"
-    >
-      <input
-        id="searchBox"
-        class="form-control me-2"
-        name="q"
-        placeholder="Tìm tour, địa điểm..."
-        value="{{ q }}"
-        autocomplete="off"
-      />
+    <form class="search-form d-flex position-relative" method="get" action="{% url 'tour_list' %}">
+      <input id="searchBox" class="form-control me-2" name="q" placeholder="Tìm tour, địa điểm..." value="{{ q }}" autocomplete="off"/>
       <button class="btn btn-search">Tìm</button>
-      <ul
-        id="suggestList"
-        class="list-group suggestions position-absolute"
-      ></ul>
+      <ul id="suggestList" class="list-group suggestions position-absolute"></ul>
     </form>
   </div>
 
+  <!-- 🔽 Bộ lọc tour Trong nước / Ngoài nước -->
+  <div class="mb-3">
+    <select id="countryFilter" class="form-select" style="width: 200px;">
+      <option value="">Tất cả</option>
+      <option value="Trong nước">Trong nước</option>
+      <option value="Ngoài nước">Ngoài nước</option>
+    </select>
+  </div>
+
   <!-- 🧭 Danh sách tour -->
-  <div class="row">
+  <div class="row" id="tourList">
     {% for tour in tours %}
-    <div class="col-md-4 mb-4">
+    <div class="col-md-4 mb-4" data-country="{{ tour.destination.country_type }}">
       <div class="card tour-card h-100 shadow-sm">
         <div class="card-media">
-          <img
-            src="{{ tour.image_url }}"
-            class="card-img-top"
-            alt="{{ tour.title }}"
-          />
+          <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}" />
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ tour.title }}</h5>
-          <p class="card-meta">
-            {{ tour.destination.name }} · {{ tour.duration }}
-          </p>
-          <p class="card-text text-truncate">
-            {{ tour.schedule|truncatewords:18 }}
-          </p>
-
+          <p class="card-meta">{{ tour.destination.name }} · {{ tour.duration }}</p>
+          <p class="card-text text-truncate">{{ tour.schedule|truncatewords:18 }}</p>
           <div class="d-flex align-items-center mt-3">
             <div class="price fw-bold text-success">{{ tour.price }} VNĐ</div>
-            <a
-              href="{% url 'tour_detail' tour.id %}"
-              class="btn btn-primary btn-sm ms-auto"
-              >Chi tiết</a
-            >
+            <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary btn-sm ms-auto">Chi tiết</a>
           </div>
         </div>
       </div>
     </div>
     {% empty %}
     <div class="col-12 text-center py-5 empty-state">
-      <img
-        src="{% static 'images/empty-tour.svg' %}"
-        alt="empty"
-        width="140"
-        class="mb-3 opacity-75"
-      />
+      <img src="{% static 'icons/empty-tour.png' %}" alt="empty" width="140" class="mb-3 opacity-75" />
       <h5 class="text-muted">Chưa có tour nào phù hợp</h5>
-      <p class="text-muted">
-        Bạn có thể xem các tour nổi bật hoặc thay đổi bộ lọc.
-      </p>
-      <a href="{% url 'tour_list' %}" class="btn btn-outline-primary mt-3"
-        >Xem tất cả tour</a
-      >
+      <p class="text-muted">Bạn có thể xem các tour nổi bật hoặc thay đổi bộ lọc.</p>
+      <a href="{% url 'tour_list' %}" class="btn btn-outline-primary mt-3">Xem tất cả tour</a>
     </div>
     {% endfor %}
   </div>
@@ -89,19 +62,19 @@
         <img src="{{ t.image_url }}" class="card-img-top" alt="{{ t.title }}" />
         <div class="card-body">
           <h6 class="mb-1">{{ t.title }}</h6>
-          <div class="text-success fw-bold">
-            {{ t.price|floatformat:0 }} VNĐ
-          </div>
+          <div class="text-success fw-bold">{{ t.price|floatformat:0 }} VNĐ</div>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
   {% endif %}
+
 </div>
 
-<!-- 🧠 Script autocomplete -->
+<!-- 🧠 Script autocomplete + filter tour -->
 <script>
+  // Autocomplete search
   const searchBox = document.getElementById("searchBox");
   const suggestList = document.getElementById("suggestList");
 
@@ -113,7 +86,7 @@
     const res = await fetch(`/suggest-destination/?q=${encodeURIComponent(q)}`);
     const data = await res.json();
 
-    data.forEach((name) => {
+    data.forEach(name => {
       const li = document.createElement("li");
       li.textContent = name;
       li.className = "list-group-item list-group-item-action";
@@ -123,6 +96,30 @@
       });
       suggestList.appendChild(li);
     });
+  });
+
+  // Filter tour Trong nước / Ngoài nước
+  const countryFilter = document.getElementById("countryFilter");
+  countryFilter.addEventListener("change", () => {
+    const value = countryFilter.value.trim();
+    const tours = document.querySelectorAll("#tourList > [data-country]");
+    let anyVisible = false;
+
+    tours.forEach(tour => {
+      const country = tour.getAttribute("data-country");
+      if (!value || country === value) {
+        tour.style.display = "block";
+        anyVisible = true;
+      } else {
+        tour.style.display = "none";
+      }
+    });
+
+    // Hiển thị thông báo nếu không còn tour nào
+    const emptyState = document.querySelector(".empty-state");
+    if (emptyState) {
+      emptyState.style.display = anyVisible ? "none" : "block";
+    }
   });
 </script>
 {% endblock %}
