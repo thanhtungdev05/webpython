@@ -13,19 +13,31 @@
     </form>
   </div>
 
-  <!-- 🔽 Bộ lọc tour Trong nước / Ngoài nước -->
-  <div class="mb-3">
+  <!-- 🔽 Bộ lọc tour -->
+  <div class="mb-3 d-flex gap-2">
     <select id="countryFilter" class="form-select" style="width: 200px;">
-      <option value="">Tất cả</option>
+      <option value="">Tất cả quốc gia</option>
       <option value="Trong nước">Trong nước</option>
       <option value="Ngoài nước">Ngoài nước</option>
+    </select>
+
+    <select id="durationFilter" class="form-select" style="width: 200px;">
+      <option value="">Tất cả số ngày</option>
+      <option value="2">2 ngày</option>
+      <option value="3">3 ngày</option>
+      <option value="4">4 ngày</option>
+      <option value="5">5 ngày</option>
+      <option value="6">6 ngày</option>
+      <option value="7">7 ngày</option>
     </select>
   </div>
 
   <!-- 🧭 Danh sách tour -->
   <div class="row" id="tourList">
     {% for tour in tours %}
-    <div class="col-md-4 mb-4" data-country="{{ tour.destination.country_type }}">
+    {% comment %} Lấy số ngày từ tour.duration: "2 ngày 1 đêm" => "2" {% endcomment %}
+    {% with tour.duration|slice:":1" as day_number %}
+    <div class="col-md-4 mb-4" data-country="{{ tour.destination.country_type }}" data-days="{{ day_number }}">
       <div class="card tour-card h-100 shadow-sm">
         <div class="card-media">
           <img src="{{ tour.image_url }}" class="card-img-top" alt="{{ tour.title }}" />
@@ -41,6 +53,7 @@
         </div>
       </div>
     </div>
+    {% endwith %}
     {% empty %}
     <div class="col-12 text-center py-5 empty-state">
       <img src="{% static 'icons/empty-tour.png' %}" alt="empty" width="140" class="mb-3 opacity-75" />
@@ -98,28 +111,31 @@
     });
   });
 
-  // Filter tour Trong nước / Ngoài nước
+  // Filter tour theo country và số ngày
   const countryFilter = document.getElementById("countryFilter");
-  countryFilter.addEventListener("change", () => {
-    const value = countryFilter.value.trim();
-    const tours = document.querySelectorAll("#tourList > [data-country]");
+  const durationFilter = document.getElementById("durationFilter");
+  const tourList = document.getElementById("tourList");
+
+  function filterTours() {
+    const countryValue = countryFilter.value.trim();
+    const dayValue = durationFilter.value.trim();
+    const tours = tourList.querySelectorAll("[data-country]");
     let anyVisible = false;
 
     tours.forEach(tour => {
       const country = tour.getAttribute("data-country");
-      if (!value || country === value) {
-        tour.style.display = "block";
-        anyVisible = true;
-      } else {
-        tour.style.display = "none";
-      }
+      const days = tour.getAttribute("data-days");
+      const show = (!countryValue || country === countryValue) &&
+                   (!dayValue || days === dayValue);
+      tour.style.display = show ? "block" : "none";
+      if (show) anyVisible = true;
     });
 
-    // Hiển thị thông báo nếu không còn tour nào
     const emptyState = document.querySelector(".empty-state");
-    if (emptyState) {
-      emptyState.style.display = anyVisible ? "none" : "block";
-    }
-  });
+    if (emptyState) emptyState.style.display = anyVisible ? "none" : "block";
+  }
+
+  countryFilter.addEventListener("change", filterTours);
+  durationFilter.addEventListener("change", filterTours);
 </script>
 {% endblock %}
