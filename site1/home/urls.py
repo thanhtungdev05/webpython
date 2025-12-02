@@ -48,7 +48,9 @@ urlpatterns = [
     # Favorite tours
     path('favorite/add/<int:tour_id>/', views.add_favorite, name='add_favorite'),
     path('favorite/remove/<int:tour_id>/', views.remove_favorite, name='remove_favorite'),
-    
+    # Chat Bot
+    path("chatbot/api/", views.chatbot_api, name="chatbot_api"),
+
 
 
     # ⚙️ API Gợi ý tìm kiếm

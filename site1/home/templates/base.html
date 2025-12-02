@@ -24,10 +24,203 @@
 
     <!-- File CSS chung -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<style>
+/* ===========================
+   CHATBOT BUTTON (Floating)
+=========================== */
+#chatbot-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 58px;
+    height: 58px;
+    background: linear-gradient(135deg, #007bff, #0056d6);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 27px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    transition: 0.25s ease;
+}
 
-    <!-- CSS riêng của từng trang -->
+#chatbot-btn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+
+/* ===========================
+   CHATBOT BOX
+=========================== */
+#chatbot-box {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 360px;
+    height: 500px;
+    display: none;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    overflow: hidden;
+    z-index: 9999;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   HEADER
+=========================== */
+#chatbot-header {
+    background: linear-gradient(135deg, #007bff, #0056d6);
+    color: white;
+    padding: 14px 16px;
+    font-weight: bold;
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chatbot-header span {
+    font-size: 20px;
+    opacity: 0.8;
+}
+#chatbot-header span:hover {
+    opacity: 1;
+}
+
+/* ===========================
+   MESSAGES AREA
+=========================== */
+#chatbot-messages {
+    flex: 1;             /* Chiếm toàn bộ không gian còn lại */
+    padding: 15px;
+    background: #f2f5f9;
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+#chatbot-messages::-webkit-scrollbar {
+    width: 8px;
+}
+#chatbot-messages::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 10px;
+}
+
+/* Message bubbles */
+.msg-bot,
+.msg-user {
+    max-width: 78%;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.35;
+    border-radius: 18px;
+    display: inline-block;
+}
+
+/* Bot bubble */
+.msg-bot {
+    background: #e7eaf0;
+    color: #333;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* User bubble */
+.msg-user {
+    background: #007bff;
+    color: #fff;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* ===========================
+   INPUT AREA
+=========================== */
+#chatbot-input {
+    display: flex;
+    padding: 12px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    flex-shrink: 0;   /* Giữ input luôn ở dưới */
+}
+
+#chatbot-text {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 12px;
+    border: 1px solid #bbb;
+    transition: 0.2s;
+}
+
+#chatbot-text:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0,123,255,0.4);
+}
+
+#chatbot-input button {
+    margin-left: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #007bff;
+    color: #fff;
+    transition: 0.25s;
+}
+
+#chatbot-input button:hover {
+    background: #0056d6;
+    transform: translateY(-1px);
+}
+
+/* ===========================
+   BUTTON BACK TO TOP
+=========================== */
+#back-to-top {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    background: #ffffffff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 9999;
+    display: none;
+    transition: .3s;
+}
+
+#back-to-top:hover {
+    transform: scale(1.15);
+}
+</style>
+
     {% block extra_css %}{% endblock %}
+    
   </head>
+
   <body>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
@@ -35,12 +228,8 @@
         <a class="navbar-brand fw-bold" href="{% url 'home' %}">
           <i class="bi bi-globe-americas me-1"></i> Travel & Tourism
         </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav"
-        >
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
           <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -48,39 +237,24 @@
           <!-- MENU TRÁI -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a
-                class="nav-link {% if request.path == '/' %}active{% endif %}"
-                href="{% url 'home' %}"
-                >Trang chủ</a
-              >
+              <a class="nav-link {% if request.path == '/' %}active{% endif %}"
+                href="{% url 'home' %}">Trang chủ</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if 'tour' in request.path %}active{% endif %}"
-                href="{% url 'tour_list' %}"
-                >Tours</a
-              >
+              <a class="nav-link {% if 'tour' in request.path %}active{% endif %}"
+                href="{% url 'tour_list' %}">Tours</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if 'about' in request.path %}active{% endif %}"
-                href="{% url 'about' %}"
-                >Giới thiệu</a
-              >
+              <a class="nav-link {% if 'about' in request.path %}active{% endif %}"
+                href="{% url 'about' %}">Giới thiệu</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if 'news' in request.path %}active{% endif %}"
-                href="{% url 'news_list' %}"
-                >Tin tức</a
-              >
+              <a class="nav-link {% if 'news' in request.path %}active{% endif %}"
+                href="{% url 'news_list' %}">Tin tức</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if 'contact' in request.path %}active{% endif %}"
-                href="{% url 'contact' %}"
-                >Liên hệ</a
-              >
+              <a class="nav-link {% if 'contact' in request.path %}active{% endif %}"
+                href="{% url 'contact' %}">Liên hệ</a>
             </li>
           </ul>
 
@@ -88,12 +262,7 @@
           <ul class="navbar-nav ms-3">
             {% if user.is_authenticated %}
             <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle text-info fw-semibold"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
+              <a class="nav-link dropdown-toggle text-info fw-semibold" href="#" data-bs-toggle="dropdown">
                 <i class="bi bi-person-circle me-1"></i> {{ user.username }}
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
@@ -114,11 +283,7 @@
               <a class="nav-link" href="{% url 'login' %}">Đăng nhập</a>
             </li>
             <li class="nav-item">
-              <a
-                class="btn btn-primary text-white ms-2"
-                href="{% url 'register' %}"
-                >Đăng ký</a
-              >
+              <a class="btn btn-primary text-white ms-2" href="{% url 'register' %}">Đăng ký</a>
             </li>
             {% endif %}
           </ul>
@@ -129,19 +294,16 @@
     <!-- MAIN -->
     <main class="py-5 mt-5">
       <div class="container">
-        {% if messages %} {% for m in messages %}
-        <div
-          class="alert alert-{{ m.tags }} alert-dismissible fade show"
-          role="alert"
-        >
+        {% if messages %}
+        {% for m in messages %}
+        <div class="alert alert-{{ m.tags }} alert-dismissible fade show" role="alert">
           {{ m }}
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-          ></button>
+          <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        {% endfor %} {% endif %} {% block content %}{% endblock %}
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
       </div>
     </main>
 
@@ -152,10 +314,105 @@
       </div>
     </footer>
 
+    <!-- BUTTON BACK TO TOP -->
+    <div id="back-to-top">⬆️</div>
+
+    <!-- BUTTON CHATBOT -->
+    <div id="chatbot-btn">💬</div>
+
+    <!-- HỘP CHATBOT -->
+    <div id="chatbot-box">
+      <div id="chatbot-header">
+        Travel AI
+        <span style="cursor:pointer" onclick="toggleChat()">✖</span>
+      </div>
+
+      <div id="chatbot-messages"></div>
+
+      <div id="chatbot-input">
+        <input id="chatbot-text" type="text" placeholder="Nhập câu hỏi..." />
+        <button onclick="sendMessage()">Gửi</button>
+      </div>
+    </div>
+
+<script>
+/* ============================
+   OPEN / CLOSE CHATBOT
+============================ */
+const btn = document.getElementById("chatbot-btn");
+const box = document.getElementById("chatbot-box");
+
+btn.onclick = () => { box.style.display = "flex"; };
+function toggleChat() { box.style.display = "none"; }
+
+/* ============================
+   SEND MESSAGE
+============================ */
+function sendMessage() {
+    let text = document.getElementById("chatbot-text").value.trim();
+    if (!text) return;
+
+    let messages = document.getElementById("chatbot-messages");
+    messages.innerHTML += `<div class='msg-user'>${text}</div>`;
+    document.getElementById("chatbot-text").value = "";
+
+    fetch("/chatbot/api/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ message: text }),
+    })
+    .then(res => res.json())
+    .then(data => {
+        messages.innerHTML += `<div class='msg-bot'>${data.reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    });
+}
+
+/* ============================
+   DRAGGABLE CHATBOT BOX
+============================ */
+const draggable = document.getElementById("chatbot-box");
+let isDragging = false, offsetX, offsetY;
+
+draggable.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - draggable.getBoundingClientRect().left;
+    offsetY = e.clientY - draggable.getBoundingClientRect().top;
+    draggable.style.transition = "none";
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        draggable.style.left = (e.clientX - offsetX) + "px";
+        draggable.style.top = (e.clientY - offsetY) + "px";
+        draggable.style.bottom = "auto";
+        draggable.style.right = "auto";
+        draggable.style.position = "fixed";
+    }
+});
+
+document.addEventListener("mouseup", () => { isDragging = false; });
+
+/* ============================
+   BACK TO TOP BUTTON
+============================ */
+const backToTop = document.getElementById("back-to-top");
+
+window.addEventListener("scroll", () => {
+    backToTop.style.display = window.scrollY > 200 ? "flex" : "none";
+});
+
+backToTop.onclick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+};
+</script>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- 🧩 Nơi chèn script riêng cho từng trang -->
     {% block scripts %}{% endblock %}
   </body>
 </html>

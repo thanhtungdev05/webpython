@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 class Destination(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name="Tên điểm đến")
     location = models.CharField(max_length=150, blank=True, verbose_name="Vị trí")
@@ -88,6 +89,19 @@ class Tour(models.Model):
         if reviews.exists():
             return round(sum(r.rating for r in reviews) / reviews.count(), 1)
         return 0
+    def get_price_after_discount(self):
+        today = date.today()
+        from .models import HolidayDiscount
+
+        discounts = HolidayDiscount.objects.filter(
+            start_date__lte=today,
+            end_date__gte=today
+        )
+
+        if discounts.exists():
+            discount = discounts.first().discount_percent
+            return int(self.price * (100 - discount) / 100)
+        return self.price
 
 
 
@@ -176,3 +190,5 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.tour.title}"
+    
+

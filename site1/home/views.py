@@ -21,6 +21,10 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import datetime
+import json
+from django.http import JsonResponse
+from .models import Tour
+from django.views.decorators.csrf import csrf_exempt
 # --- Trang chủ ---
 def home(request):
     destinations = Destination.objects.filter(featured=True)[:6]
@@ -492,6 +496,182 @@ def remove_favorite(request, tour_id):
     messages.info(request, f'Đã xóa "{tour.title}" khỏi danh sách yêu thích.')
     return redirect('profile')
 
+@csrf_exempt
+def chatbot_api(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        question = data.get("message", "").lower().strip()
+
+        # ======== IMPORT MODELS =========
+        from .models import Tour, Destination
+
+        # =================================================
+        # 1. GỢI Ý TOUR NỔI BẬT
+        # =================================================
+        if "tour" in question and ("gợi ý" in question or "tư vấn" in question or "đề xuất" in question):
+            tours = Tour.objects.filter(featured=True)[:5]
+
+            if not tours.exists():
+                return JsonResponse({"reply": "Hiện chưa có tour nổi bật nào."})
+
+            reply = "Dưới đây là các tour nổi bật của chúng tôi:<br>"
+            for t in tours:
+                reply += f"👉 <a href='/tour/{t.id}/'>{t.title}</a><br>"
+
+            reply += "<br>Bạn muốn tìm tour nào ạ?"
+            return JsonResponse({"reply": reply})
+
+        # =================================================
+        # 2. TÌM TOUR THEO ĐIỂM ĐẾN
+        # =================================================
+        for dest in Destination.objects.all():
+            if dest.name.lower() in question:
+                tours = Tour.objects.filter(destination=dest)
+
+                if not tours.exists():
+                    return JsonResponse({"reply": f"Hiện chưa có tour nào đến {dest.name}."})
+
+                reply = f"Các tour đến <b>{dest.name}</b>:<br>"
+                for t in tours:
+                    reply += f"👉 <a href='/tour/{t.id}/'>{t.title}</a><br>"
+
+                reply += "<br>Bạn muốn xem chi tiết tour nào?"
+                return JsonResponse({"reply": reply})
+
+        # =================================================
+        # 3. TÌM TOUR THEO TÊN TOUR
+        # =================================================
+        for tour in Tour.objects.all():
+            if tour.title.lower() in question or any(word in question for word in tour.title.lower().split()):
+
+                # --- Hỏi giá ---
+                if "giá" in question:
+                    price = f"{tour.price:,}" if tour.price else "Đang cập nhật"
+                    return JsonResponse({
+                        "reply": f"Giá của tour <b>{tour.title}</b> là <b>{price} VNĐ</b>.<br>"
+                                 f"👉 <a href='/tour/{tour.id}/'>Xem chi tiết tour</a>"
+                    })
+
+                # --- Hỏi lịch trình ---
+                if "lịch trình" in question or "schedule" in question:
+                    return JsonResponse({
+                        "reply": f"Lịch trình của tour <b>{tour.title}</b>:<br>{tour.schedule[:500]}..."
+                                 f"<br><br>👉 <a href='/tour/{tour.id}/'>Xem đầy đủ</a>"
+                    })
+
+                # --- Hỏi thời tiết ---
+                if "thời tiết" in question or "mưa" in question or "nắng" in question:
+                    return JsonResponse({
+                        "reply": f"Bạn muốn hỏi thời tiết tại <b>{tour.destination.name}</b> ạ?<br>"
+                                 f"Hiện tại thời tiết ổn định, tùy mùa sẽ thay đổi nhẹ.<br>"
+                                 f"👉 <a href='/tour/{tour.id}/'>Xem tour</a>"
+                    })
+
+                # --- Hỏi cách đặt tour ---
+                if "đặt tour" in question or "cách đặt" in question:
+                    return JsonResponse({
+                        "reply": (
+                            f"Hướng dẫn đặt tour <b>{tour.title}</b>:<br>"
+                            "1️⃣ Truy cập trang chi tiết tour<br>"
+                            "2️⃣ Nhấn nút <b>Đặt ngay</b><br>"
+                            "3️⃣ Nhập thông tin của bạn<br>"
+                            "4️⃣ Chọn phương thức thanh toán<br>"
+                            "5️⃣ Xác nhận đặt tour 🎉<br><br>"
+                            f"👉 <a href='/tour/{tour.id}/'>Đi tới trang đặt tour</a>"
+                        )
+                    })
+
+                return JsonResponse({
+                    "reply": f"Bạn muốn xem thông tin gì về tour <b>{tour.title}</b>?<br>"
+                             "- Giá tour<br>"
+                             "- Lịch trình<br>"
+                             "- Thời tiết<br>"
+                             "- Hướng dẫn đặt tour<br>"
+                })
+
+        # =================================================
+        # 4. TOUR TRONG NƯỚC / NGOÀI NƯỚC
+        # =================================================
+        if "trong nước" in question or "tour trong nước" in question:
+            tours = Tour.objects.filter(tour_type__in=["domestic", "trong nuoc", "trong_nuoc", "trong-nuoc"])
+            reply = "Các tour trong nước:<br>"
+            for t in tours:
+                reply += f"👉 <a href='/tour/{t.id}/'>{t.title}</a><br>"
+            return JsonResponse({"reply": reply})
+
+
+        if "ngoài nước" in question or "nước ngoài" in question or "tour nước ngoài" in question:
+            tours = Tour.objects.filter(tour_type__in=["foreign", "ngoai nuoc", "ngoai_nuoc", "ngoai-nuoc"])
+            reply = "Các tour nước ngoài:<br>"
+            for t in tours:
+                reply += f"👉 <a href='/tour/{t.id}/'>{t.title}</a><br>"
+            return JsonResponse({"reply": reply})
+
+        # =================================================
+        # 5. HƯỚNG DẪN ĐẶT TOUR – CHUNG
+        # =================================================
+        if "đặt tour" in question or "cách đặt" in question:
+            reply = (
+                "Để đặt tour, bạn thực hiện các bước sau:<br>"
+                "1️⃣ Chọn tour bạn muốn<br>"
+                "2️⃣ Nhấn nút <b>Đặt tour</b><br>"
+                "3️⃣ Nhập thông tin cá nhân<br>"
+                "4️⃣ Chọn hình thức thanh toán<br>"
+                "5️⃣ Xác nhận đặt tour thành công 🎉<br><br>"
+                "Bạn muốn đặt tour nào ạ?"
+            )
+            return JsonResponse({"reply": reply})
+
+        # =================================================
+        # 6. HƯỚNG DẪN THANH TOÁN – CHUNG
+        # =================================================
+        if "thanh toán" in question or "momo" in question or "chuyển khoản" in question or "visa" in question:
+            reply = (
+                "Hiện tại hệ thống hỗ trợ 3 hình thức thanh toán:<br><br>"
+                "<b>💜 1. Thanh toán bằng Momo</b><br>"
+                "• Quét mã QR<br>"
+                "• Hoặc nhập số điện thoại Momo<br><br>"
+
+                "<b>🏦 2. Chuyển khoản ngân hàng</b><br>"
+                "• Chuyển khoản theo thông tin hiển thị<br>"
+                "• Nội dung: Tên + Mã tour<br><br>"
+
+                "<b>💳 3. Thanh toán bằng Visa/MasterCard</b><br>"
+                "• Nhập số thẻ, ngày hết hạn, mã CVV<br><br>"
+
+                "Bạn muốn thanh toán bằng phương thức nào?"
+            )
+            return JsonResponse({"reply": reply})
+
+        # =================================================
+        # 7. LỜI CHÀO
+        # =================================================
+        if "hello" in question or "xin chào" in question or "hi" in question:
+            return JsonResponse({
+                "reply": (
+                    "Xin chào! Tôi là TravelBot 🤖<br>"
+                    "Tôi có thể giúp bạn tìm tour, xem giá, lịch trình, thời tiết "
+                    "và hướng dẫn đặt tour – thanh toán."
+                )
+            })
+
+        # =================================================
+        # 8. KHÔNG HIỂU
+        # =================================================
+        return JsonResponse({
+            "reply": (
+                "Mình chưa hiểu câu hỏi của bạn 😅<br>"
+                "Bạn có thể hỏi về:<br>"
+                "- Gợi ý tour<br>"
+                "- Giá tour<br>"
+                "- Lịch trình<br>"
+                "- Cách đặt tour<br>"
+                "- Thanh toán<br>"
+                "- Tour trong nước / nước ngoài"
+            )
+        })
+
+    return JsonResponse({"error": "Invalid request"})
 
 
 
